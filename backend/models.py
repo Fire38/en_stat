@@ -34,4 +34,17 @@ class Player(models.Model):
         return self.name
 
 
+class Personal_statistic(models.Model):
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.game.name + " - " + self.team.name + " - " + self.player.name
+
+
+class Rating(models.Model):
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    rate = models.IntegerField()
 

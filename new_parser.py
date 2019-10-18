@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "en_statistic.settings")
 django.setup()
 
-from backend.models import Game, Team, Player
+from backend.models import Game, Team, Player, Personal_statistic
 
 LOGIN_URL = "http://vbratske.en.cx/Login.aspx"
 LOGIN_DATA = {'Login': 'f1re', 'Password': 'Zte261192'}
@@ -71,12 +71,43 @@ def get_winner(soup, game_type):
     return winner
 
 
+def get_player_rate(soup):
+    """Определяет какую оценку поставил игрок в конкретной игре"""
+    try:
+        full_teams_list = soup.find(id='lnkTopFull')
+        res = session.get(MAIN_URL + full_teams_list['href'])
+        soup = BeautifulSoup(res.text, 'html.parser')
+    except:
+        pass
+    rate_link_list = soup.find_all(id=re.compile('_TeamRateLink'))
+    print(len(rate_link_list))
+    for rate_page in rate_link_list:
+        print(rate_page)
+    for rate_page in rate_link_list:
+        # страхуемся что никто в команде не поставил оценку
+        try:
+            #print(rate_page)
+            res = session.get(MAIN_URL + rate_page['href'])
+            #player_block = res.text.split('toWinnerItem')
+            soup = BeautifulSoup(res.text, 'html.parser')
+            player_lines = soup.find_all(class_='toWinnerItem')
+            for line in player_lines:
+                player = line.find(id=re.compile('_lnkUserInfo'))
+                rate = line.find(class_=re.compile('topWinners pink'))
+                print("ИГРОК", player.text, ' поставил оценку: ', rate.text)
+
+            print('\n===============================================================\n')
+        except:
+            print("В этой команде никто не поставил оценку")
+
+
 def get_teams_players(soup):
     """Состав команды на конкретную игру"""
     full_team_url = soup.find(id='lnkWinnerMembersEdit')
 
     res = session.get(MAIN_URL + full_team_url['href'])
     page_block = res.text.split('Team:')
+    team_dict = {}
     for page in page_block:
         # print("БЛОК-------------------", page)
         soup = BeautifulSoup(page, 'html.parser')
@@ -85,12 +116,14 @@ def get_teams_players(soup):
         print("Название команды", team_name)
         team = []
         for player in players:
-            team.append(player.text)
-        print("Игроки команды", team)
+            team.append(player)
+        try:
+            team_dict[team_name.text] = team
+        except:
+            pass
+    print(team_dict)
+    return team_dict
         #print("------------------------\n")
-
-
-#get_domain_teams_list()
 
 
 def get_general_game_information(soup):
@@ -144,6 +177,7 @@ def get_general_game_information(soup):
     return game_title, url, game_diff, quality_index, team_count, game_type, forum_resonance, date
 
 
+#get_domain_teams_list()
 GAME_LIST_URL = "http://vbratske.en.cx/Games.aspx?page="
 for i in range(1,7):
     rr = session.get(GAME_LIST_URL + str(i))
@@ -173,6 +207,7 @@ for i in range(1,7):
         game.winner = winner
         game.save()
         if game_type == 'Командная':
+            get_player_rate(soup)
             # получаем команды для добавления в таблицу игр
             teams = get_games_teams(soup, game_type)
             for team in teams:
@@ -180,9 +215,17 @@ for i in range(1,7):
                 game.team.add(t)
                 game.save()
             # TODO какой игрок в какой команде был на какой игре
-            get_teams_players(soup)
+            playing_teams = get_teams_players(soup)
+            for team_name, player_list in playing_teams.items():
+                team = Team.objects.get(name=team_name)
+                for player in player_list:
+                    player = Player.objects.get_or_create(name=player.text, url = MAIN_URL + player['href'])[0]
+                    Personal_statistic.objects.create(player=player, game=game, team=team)
+
+
+
             print('=========================================================================\n\n')
-            sleep(randint(0,3))
+            sleep(randint(1,5))
 
 
 """
