@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class Team(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=150)
     url = models.URLField(max_length=100)
 
     def __str__(self):
@@ -46,5 +46,25 @@ class Personal_statistic(models.Model):
 class Rating(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    rate = models.IntegerField()
+    rate = models.IntegerField(blank=True)
 
+    def __str__(self):
+        return self.game.name + ' - ' + self.player.name
+
+
+class Code(models.Model):
+    player = models.ManyToManyField(Player)
+    code_text = models.CharField(max_length=200)
+    correct = models.BooleanField()
+    game = models.ManyToManyField(Game)
+
+    def __str__(self):
+        return self.code_text
+
+
+class Author(models.Model):
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.player.name + ' - ' + self.game.name

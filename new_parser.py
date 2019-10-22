@@ -1,5 +1,6 @@
 import re
 import os
+import pprint
 import django
 import requests
 import datetime
@@ -10,7 +11,7 @@ from bs4 import BeautifulSoup
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "en_statistic.settings")
 django.setup()
 
-from backend.models import Game, Team, Player, Personal_statistic
+from backend.models import Game, Team, Player, Personal_statistic, Rating, Code, Author
 
 LOGIN_URL = "http://vbratske.en.cx/Login.aspx"
 LOGIN_DATA = {'Login': 'f1re', 'Password': 'Zte261192'}
@@ -40,6 +41,7 @@ def get_domain_teams_list():
 
 def get_games_teams(soup, game_type):
     """Команды принимающие участие в конкретной игре"""
+    print('\nИщем учавствующие команды: \n')
     teams = soup.find_all(id="lnkPlayerInfo")
     if game_type == 'Командная':
         for team in teams:
@@ -79,30 +81,32 @@ def get_player_rate(soup):
         soup = BeautifulSoup(res.text, 'html.parser')
     except:
         pass
-    rate_link_list = soup.find_all(id=re.compile('_TeamRateLink'))
-    print(len(rate_link_list))
-    for rate_page in rate_link_list:
-        print(rate_page)
-    for rate_page in rate_link_list:
+
+    rate_links = soup.find_all(id=re.compile('_TeamRateLink'))
+    player_rate_dict = {}
+    print("\nЗаписываем оценки игроков\n")
+    for rate_link in rate_links:
+
         # страхуемся что никто в команде не поставил оценку
         try:
-            #print(rate_page)
-            res = session.get(MAIN_URL + rate_page['href'])
-            #player_block = res.text.split('toWinnerItem')
+            res = session.get(MAIN_URL + rate_link['href'])
+            # player_block = res.text.split('toWinnerItem')
             soup = BeautifulSoup(res.text, 'html.parser')
             player_lines = soup.find_all(class_='toWinnerItem')
             for line in player_lines:
                 player = line.find(id=re.compile('_lnkUserInfo'))
                 rate = line.find(class_=re.compile('topWinners pink'))
-                print("ИГРОК", player.text, ' поставил оценку: ', rate.text)
-
-            print('\n===============================================================\n')
+                player_rate_dict[player.text] = rate.text
+                # print("ИГРОК", player.text, ' поставил оценку: ', rate.text)
         except:
-            print("В этой команде никто не поставил оценку")
+            print("Без оценок")
+    pprint.pprint(player_rate_dict)
+    return player_rate_dict
 
 
 def get_teams_players(soup):
     """Состав команды на конкретную игру"""
+    print("\n Собираем информацию о составах команд\n")
     full_team_url = soup.find(id='lnkWinnerMembersEdit')
 
     res = session.get(MAIN_URL + full_team_url['href'])
@@ -121,9 +125,56 @@ def get_teams_players(soup):
             team_dict[team_name.text] = team
         except:
             pass
-    print(team_dict)
     return team_dict
         #print("------------------------\n")
+
+
+def get_monitoring(soup):
+    monitoring_href = soup.find(id='GameDetail_lnkMonitoring')
+    res = session.get(MAIN_URL + monitoring_href['href'])
+    page = BeautifulSoup(res.text, 'html.parser')
+    pagintor = page.find_all('a', href=re.compile('Administration/Games/ActionMonitor.aspx\?gid='))
+    last_page = pagintor[len(pagintor)-1].text
+    i = 1
+
+    code_list = []
+    while i <= int(last_page):
+        print(MAIN_URL + monitoring_href['href'] + '&page=' + str(i))
+        res = session.get(MAIN_URL + monitoring_href['href'] + '&page=' + str(i))
+        player_block = res.text.split('padL5')
+        for block in player_block:
+            soup = BeautifulSoup(block, 'html.parser')
+
+            try:
+                sublist = []
+                # team = soup.find(id=re.compile('lnkTeam'))
+                player = soup.find(id=re.compile('lnkUserInfo'))
+                code_type = soup.find(id=re.compile('_lblCorrectValue'))
+                code_text = soup.find_all('span', class_='nonLatinChar')
+
+                # print(player.text, code_type.text)
+                if len(code_text) > 1:
+                    full_code = ''
+                    for code in code_text:
+                        full_code += code.text + ' '
+                    # print(one_code)
+                else:
+                    full_code = code_text[0].text
+                    # print(one_code)
+                sublist.append(player)
+                sublist.append(code_type.text)
+                sublist.append(full_code)
+                code_list.append(sublist)
+                # print(type(code_list))
+
+            except:
+                # print('tut')
+                pass
+        print('====================================================\n')
+        i += 1
+        sleep(randint(0,2))
+
+    return code_list
 
 
 def get_general_game_information(soup):
@@ -174,7 +225,7 @@ def get_general_game_information(soup):
     except:
         date = datetime.date(year=2020, month=1, day=1)
 
-    return game_title, url, game_diff, quality_index, team_count, game_type, forum_resonance, date
+    return game_title, url, game_diff, quality_index, team_count, game_type, forum_resonance, date, authors
 
 
 #get_domain_teams_list()
@@ -193,7 +244,7 @@ for i in range(1,7):
         res = session.get(url)
         soup = BeautifulSoup(res.text, 'html.parser')
 
-        game_title, url, game_diff, quality_index, team_count, game_type, forum_resonance, date = get_general_game_information(soup)
+        game_title, url, game_diff, quality_index, team_count, game_type, forum_resonance, date, authors = get_general_game_information(soup)
 
         game = Game.objects.get_or_create(name=game_title.text,
                                           url=url,
@@ -207,25 +258,63 @@ for i in range(1,7):
         game.winner = winner
         game.save()
         if game_type == 'Командная':
-            get_player_rate(soup)
-            # получаем команды для добавления в таблицу игр
+            # получаем команды, которые играли
             teams = get_games_teams(soup, game_type)
             for team in teams:
-                t = Team.objects.get(name=team.text)
+                t = Team.objects.get_or_create(name=team.text)[0]
                 game.team.add(t)
                 game.save()
+            # выясняем кто за кого играл
             # TODO какой игрок в какой команде был на какой игре
             playing_teams = get_teams_players(soup)
             for team_name, player_list in playing_teams.items():
                 team = Team.objects.get(name=team_name)
                 for player in player_list:
                     player = Player.objects.get_or_create(name=player.text, url = MAIN_URL + player['href'])[0]
-                    Personal_statistic.objects.create(player=player, game=game, team=team)
+                    Personal_statistic.objects.get_or_create(player=player, game=game, team=team)
+            # получаем оценки игроков за игру
+            rate_dict = get_player_rate(soup)
+            for player_name, rate in rate_dict.items():
+                player = Player.objects.get(name=player_name)
+                Rating.objects.get_or_create(player=player, game=game, rate=rate)
+
+
+            # если мониторинг открыт
+            try:
+                monitoring = get_monitoring(soup)
+                print(type(monitoring))
+                    #print(type(monitoring[0]))
+                    # print(monitoring)
+                for element in monitoring:
+                    print(element)
+                    player = Player.objects.get_or_create(name=element[0].text, url= MAIN_URL + element[0]['href'])[0]
+                    print(player)
+                    if element[1] == 'w':
+                        correct = False
+                    else:
+                        correct = True
+                        # print(player, element[2], correct)
+                    if Code.objects.filter(code_text=element[2], correct=correct, player=player, game=game).exists():
+                        print('Такой код этот игрок уже вбивал')
+                    else:
+                        c = Code.objects.create(code_text=element[2], correct=correct)
+                        c.player.add(player)
+                        c.game.add(game)
+                        c.save()
+            except:
+                print('Проблемы с мониторингом:(')
+
+        for author in authors:
+            player = Player.objects.get(name=author.text)
+            Author.objects.create(player=player, game=game)
 
 
 
-            print('=========================================================================\n\n')
-            sleep(randint(1,5))
+
+
+
+        print('=========================================================================\n\n')
+        sleep(randint(1,5))
 
 
 """

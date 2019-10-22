@@ -1,0 +1,16 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Статистика EN</title>
+</head>
+<body>
+Всего игр сыграно: {{ game_count }}
+Всего авторов: {{ author_count }}
+<br/>
+{% for author in authors %}
+{{ author.player.name }}<br/>
+{% endfor %}
+</body>
+</html>
