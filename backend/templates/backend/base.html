@@ -1,0 +1,52 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title_block %} {% endblock %}
+    </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link href="{% static 'css/styles.css'%}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-dark " id="navBar">
+      <a class="navbar-brand" href="#">
+        <img src="{% static 'images/en_logo.png' %}" alt="en_logo">
+      </a>
+      <div class="inline">
+          <img src="{% static 'images/orden-2.png' %}">
+            <img src="{% static 'images/orden-1.png' %}">
+      </div>
+
+    </nav>
+
+    <ul class="nav nav-pills nav-fill">
+      <li class="nav-item">
+        <a class="nav-link active" href="#">С 2019 года</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">С 2018 года</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Все собранные данные</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Статистика игрока</a>
+      </li>
+    </ul>
+
+    <div class="container" id="info">
+        <div class="row">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+
+</body>
+</html>

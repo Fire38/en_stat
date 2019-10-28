@@ -1,16 +1,49 @@
+{% extends 'backend/base.html' %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Статистика EN</title>
-</head>
-<body>
-Всего игр сыграно: {{ game_count }}
-Всего авторов: {{ author_count }}
-<br/>
-{% for author in authors %}
-{{ author.player.name }}<br/>
-{% endfor %}
-</body>
-</html>
+{% block title_block %}
+    EN статистика 2019
+{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid" id="infoBlock">
+        <h2>Общая информация</h2>
+        <hr/>
+            <div class="row">
+                <div id="stat" class="col-6">
+                    <b>Всего игр сыграно:</b> {{ games_count }} [?]<br/>
+                    <b>Всего авторов:</b> {{ authors_count }}<br/>
+                    <b>Всего команд:</b> {{ teams_count }}<br/>
+                    <b>Всего игроков:</b> {{ players_count }}<br/>
+                    <b>Самая резонансная игра на форуме:</b> <a href="{{ max_resonance_game.1 }}">{{ max_resonance_game.0 }}</a> ({{ max_resonance_game.2 }} сообщение)<br/>
+                    <b>Самая качественная командная игра:</b><br/>
+                </div>
+
+                <div id="stat" class="col-6">
+                    <b>Самая побеждающая команда:</b><br/>
+                    <b>Кодов вбито:</b><br/>
+                    <b>Автор с большим количество игр:</b><br/>
+                    <b>Самый частоиграющий:</b><br/>
+                    <b>Самый "добрый" игрок:</b><br/>
+                    <b>Самый "злой" игрок:</b><br/>
+                </div>
+            </div>
+    </div>
+
+    <div class="container-fluid" id="infoBlock">
+        <h2>Игры</h2>
+        <hr/>
+        График с играми по месяцам,
+    </div>
+
+    <div class="container-fluid" id="infoBlock">
+        <h2>Авторы</h2>
+        <hr/>
+    </div>
+
+    <br/>
+    {% for author in authors %}
+    {{ author.player.name }}<br/>
+    {% endfor %}
+    {{ graph }}
+{% endblock %}

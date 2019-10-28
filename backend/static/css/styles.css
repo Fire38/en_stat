@@ -1,0 +1,52 @@
+body{
+    background-image: url('http://cdn.endata.cx/data/pr/wallpapers/17/17.2048x1536.jpg');
+    background-repeat: none;
+    background-attachment: fixed;
+}
+
+
+#navBar, .nav{
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.nav-pills .nav-link.active{
+    background-color: rgba(0, 0, 0, 0);
+    color: gold;
+}
+
+.nav-link{
+    color: gold;
+    font-weight: bold;
+}
+
+.nav-link:hover{
+    color: gold;
+    font-weight: bold;
+
+}
+.nav-link.active{
+    color: gold;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#infoBlock{
+    background-color: rgba(0, 0, 0, 0.8);
+    color: gold;
+    margin-top: 10px;
+    border-radius: 15px;
+    padding: 20px 10px 20px 25px;
+}
+
+hr {
+    border: 0.5px solid gold;
+    width: 500px;
+}
+
+h2{
+    text-align: center;
+}
+
+#stat{
+    padding-left: 25px;
+}
