@@ -16,14 +16,15 @@
                     <b>Всего команд:</b> {{ teams_count }}<br/>
                     <b>Всего игроков:</b> {{ players_count }}<br/>
                     <b>Самая резонансная игра на форуме:</b> <a href="{{ max_resonance_game.1 }}">{{ max_resonance_game.0 }}</a> ({{ max_resonance_game.2 }} сообщение)<br/>
-                    <b>Самая качественная командная игра:</b><br/>
+                    <b>Самая качественная командная игра:</b> <a href="{{ max_quality_game.1 }}">{{ max_quality_game.0 }}</a> ({{ max_quality_game.2 }})<br/>
                 </div>
 
                 <div id="stat" class="col-6">
-                    <b>Самая побеждающая команда:</b><br/>
-                    <b>Кодов вбито:</b><br/>
-                    <b>Автор с большим количество игр:</b><br/>
-                    <b>Самый частоиграющий:</b><br/>
+                    <b>Самая побеждающая команда: </b> {{ best_team.0 }} ({{ best_team.1 }})<br/>
+                    <b>Самая частоиграющая команда: </b> <a href={{ often_team.1 }} >{{ often_team.0 }}</a> ({{ often_team.2}})</br>
+                    <b>Кодов вбито: </b>{{ codes_count.0 }}<br/>
+                    <b>Автор с большим количество игр: </b>{{ best_author.0 }} ({{ best_author.1 }} игр)<br/>
+                    <b>Самый частоиграющий:</b> {{ often_player.0 }} ({{ often_player.1 }})<br/>
                     <b>Самый "добрый" игрок:</b><br/>
                     <b>Самый "злой" игрок:</b><br/>
                 </div>
@@ -33,17 +34,78 @@
     <div class="container-fluid" id="infoBlock">
         <h2>Игры</h2>
         <hr/>
-        График с играми по месяцам,
+        <div class="col-12">
+            {{ forum_resonance_graph|safe }}
+        </div>
+        <div>
+            {{ quality_graphic|safe }}
+        </div>
     </div>
 
     <div class="container-fluid" id="infoBlock">
         <h2>Авторы</h2>
         <hr/>
+        <div class="col-12">
+            {{ div|safe }}
+        </div>
+
+        <div class="accordion" id="accordionExample">
+          <div class="card">
+            <div class="card-header" id="headingOne">
+
+                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <b>Список авторов</b>
+                </button>
+
+            </div>
+
+
+
+              <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <table class="table">
+                  <thead>
+                    <tr>
+
+                      <th scope="col">Автор</th>
+                      <th scope="col">Игры</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                    {% for author, values in authors_dict.items %}
+                        <tr>
+                            <td> <b>{{ author }}</b></td>
+                            <td>
+                            {% for v in values %}
+                                <div><a href="{{ v.1 }}">{{ v.0 }}</a></div>
+                            {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+          </div>
     </div>
+
+
 
     <br/>
     {% for author in authors %}
     {{ author.player.name }}<br/>
     {% endfor %}
     {{ graph }}
+    </div>
+    <div class="container-fluid" id="infoBlock">
+        <h2>Команды</h2>
+        <hr/>
+
+    </div>
+
+    <div class="container-fluid" id="infoBlock">
+        <h2>Игроки</h2>
+        <hr/>
+        График с играми по месяцам,
+    </div>
 {% endblock %}

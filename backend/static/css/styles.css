@@ -22,8 +22,14 @@ body{
 .nav-link:hover{
     color: gold;
     font-weight: bold;
-
+    text-decoration: underline;
 }
+
+.btn-link, a, .btn-link:hover, a:hover{
+    padding: 0px, 0px, 0px, 0px;
+    color: gold;
+}
+
 .nav-link.active{
     color: gold;
     font-weight: bold;
@@ -35,7 +41,7 @@ body{
     color: gold;
     margin-top: 10px;
     border-radius: 15px;
-    padding: 20px 10px 20px 25px;
+    padding: 20px 25px 20px 25px;
 }
 
 hr {
@@ -49,4 +55,12 @@ h2{
 
 #stat{
     padding-left: 25px;
+}
+
+.card, #headingOne{
+    background-color: rgba(0, 0, 0, 0);
+}
+
+#headingOne{
+    padding-left: 0px;
 }
