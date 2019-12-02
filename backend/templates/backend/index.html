@@ -5,6 +5,29 @@
 {% endblock %}
 
 {% block content %}
+    <div class="container-fluid" id="infoBlock">
+       <p>
+          <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+            Нажми если зашел в первый раз
+          </a>
+        </p>
+        <div class="collapse" id="collapseExample">
+          <div class="card card-body">
+            <ul>
+                <li>Здесь собраны игры проходившие на домене vbratske.en.cx</li>
+                <li>Если игра одиночная, то статистика по игравшим игрокам, командам, оценкам игроков,
+                    мониторингу кодов не собирается</li>
+                <li>К одиночным играм относятся Мокрые войны, Викторины, одиночки на движке схватки </li>
+                <li>Игры признанные несостоявшимися также в учет не берутся (по-моему только одна игра)</li>
+                <li>Коды собраны только с игр, в  которые у меня есть доступ</li>
+                <li>Повторы одного и того же кода одним и тем же игроков не учитываются</li>
+                <li>За количество команд принимается количество поданых заявок</li>
+                <li>За текущий год статистики немного больше чем за предыдущие</li>
+                <li>Если в строке индекса качества игры стоит прочерк, индекс приравнивается к нулю</li>
+            </ul>
+          </div>
+        </div>
+    </div>
 
     <div class="container-fluid" id="infoBlock">
         <h2>Общая информация</h2>
@@ -15,18 +38,62 @@
                     <b>Всего авторов:</b> {{ authors_count }}<br/>
                     <b>Всего команд:</b> {{ teams_count }}<br/>
                     <b>Всего игроков:</b> {{ players_count }}<br/>
-                    <b>Самая резонансная игра на форуме:</b> <a href="{{ max_resonance_game.1 }}">{{ max_resonance_game.0 }}</a> ({{ max_resonance_game.2 }} сообщение)<br/>
-                    <b>Самая качественная командная игра:</b> <a href="{{ max_quality_game.1 }}">{{ max_quality_game.0 }}</a> ({{ max_quality_game.2 }})<br/>
+                    <b>Самая резонансная игра на форуме:</b>
+                    {% for game in max_resonance_game %}
+                        <br/>
+                        <a href="{{ game.1 }}">{{ game.0 }}</a> ({{ game.2 }} сообщение)
+                    {% endfor %}<br/>
+                    <b>Самая качественная командная игра:</b>
+                    {% for game in max_quality_game %}
+                        <br/>
+                        <a href="{{ game.1 }}">{{ game.0 }}</a> ({{ game.2 }})
+                    {% endfor %}<br/>
+
+                    <b>Топ 3 побеждающих команд: </b>
+                    <br/>
+                    {% for team in top3_best_team %}
+                        {{ team.0 }} ({{ team.1 }})<br/>
+                    {% endfor %}
+
+                    <b>Самая частоиграющая команда: </b>
+                    <br/>
+                    {% for team in top3_often_team %}
+                        <a href={{ team.1 }} >{{ team.0 }}</a> ({{ team.2}})</br>
+                    {% endfor %}
+
+                    <b>Кодов вбито: </b>{{ codes_count.0 }}<br/>
+
+                    <b>Автор с большим количество игр: </b>
+                    <br/>
+                    {% for author in best_authors %}
+                        {{ author.0 }} ({{ author.1 }} игр)<br/>
+                    {% endfor %}
+
                 </div>
 
                 <div id="stat" class="col-6">
-                    <b>Самая побеждающая команда: </b> {{ best_team.0 }} ({{ best_team.1 }})<br/>
-                    <b>Самая частоиграющая команда: </b> <a href={{ often_team.1 }} >{{ often_team.0 }}</a> ({{ often_team.2}})</br>
-                    <b>Кодов вбито: </b>{{ codes_count.0 }}<br/>
-                    <b>Автор с большим количество игр: </b>{{ best_author.0 }} ({{ best_author.1 }} игр)<br/>
-                    <b>Самый частоиграющий:</b> {{ often_player.0 }} ({{ often_player.1 }})<br/>
-                    <b>Самый "добрый" игрок:</b><br/>
-                    <b>Самый "злой" игрок:</b><br/>
+
+                    <b>Самый частоиграющий:</b>
+                    <br/>
+                    {% for player in often_players %}
+                        {{ player.0 }} ({{ player.1 }})<br/>
+                    {% endfor %}
+
+                    <b>Самый "добрый" игрок:</b>
+                    <br/>
+                    <ul>
+                    {% for player in good_rate_players %}
+                        {{player.0}} - {{player.2}}<br/>
+                    {% endfor %}
+                    </ul>
+
+                    <b>Самый "злой" игрок:</b>
+                    <br/>
+                    <ul>
+                        {% for player in strict_rate_players %}
+                            {{player.0}} - {{player.2}}<br/>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
     </div>
@@ -35,11 +102,40 @@
         <h2>Игры</h2>
         <hr/>
         <div class="col-12">
+            {{ total_player_graphic|safe }}
+        </div>
+        <div class="col-12">
+            {{ total_team_graphic|safe }}
+        </div>
+        {% if year == 2019 %}
+            <div class="col-12">
+                {{ total_players_per_month_graphic|safe }}
+            </div>
+            <div class="col-12">
+                {{ total_teams_per_month_graphic|safe }}
+            </div>
+            <div class="col-12">
+                {{ total_teams_per_game_graphic|safe }}
+            </div>
+            <div class="col-12">
+                {{ total_players_per_game_graphic|safe }}
+            </div>
+        {% endif %}
+        <div class="col-12">
             {{ forum_resonance_graph|safe }}
         </div>
-        <div>
+        <div class="col-12">
             {{ quality_graphic|safe }}
         </div>
+        <div>
+            <h4>Список победителей</h4>
+            <ul>
+            {% for winner in winner_list %}
+                <li>{{ winner.0 }} - {{ winner.1 }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+
     </div>
 
     <div class="container-fluid" id="infoBlock">
@@ -100,12 +196,24 @@
     <div class="container-fluid" id="infoBlock">
         <h2>Команды</h2>
         <hr/>
+        <div>
+            <h4>Список частоиграющих команд</h4>
+            <ul>
+            {% for team in often_teams_list %}
+                <li>{{ team.0 }} - {{ team.2 }}</li>
+            {% endfor %}
+            </ul>
+        </div>
 
     </div>
 
     <div class="container-fluid" id="infoBlock">
         <h2>Игроки</h2>
         <hr/>
-        График с играми по месяцам,
+        <ul>
+        {% for player in rate_list %}
+            <li>{{player.0}} ({{player.1}} игр) - {{player.2}}</li>
+        {% endfor %}
+        </ul>
     </div>
 {% endblock %}

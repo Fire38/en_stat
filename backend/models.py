@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class Team(models.Model):
-    name = models.CharField(max_length=150)
+    name = models.CharField(max_length=150, unique=True)
     url = models.URLField(max_length=100)
 
     def __str__(self):
@@ -20,7 +20,7 @@ class Game(models.Model):
     team_count = models.IntegerField()
     forum_resonance = models.IntegerField()
     winner = models.CharField(max_length=100)
-    team = models.ManyToManyField(Team)
+    team = models.ManyToManyField(Team, blank=True)
 
     def __str__(self):
         return self.name

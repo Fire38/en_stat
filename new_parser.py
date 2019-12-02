@@ -7,31 +7,44 @@ import datetime
 from time import sleep
 from random import randint
 from bs4 import BeautifulSoup
+from fake_useragent import UserAgent
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "en_statistic.settings")
 django.setup()
 
 from backend.models import Game, Team, Player, Personal_statistic, Rating, Code, Author
 
+
 LOGIN_URL = "http://vbratske.en.cx/Login.aspx"
-LOGIN_DATA = {'Login': 'f1re', 'Password': 'Zte261192'}
+LOGIN_DATA = {'Login': 'f1re', 'Password': 'Zte261192', 'socailAssign': '0', 'EnButton1': 'Sing In', 'ddlNetwork': '1', 'mobile': '0'}
 
 MAIN_URL = "http://vbratske.en.cx"
+ua = UserAgent(use_cache_server=True)
+headers = {'User-Agent': ua.random}
+
 # получаем токен, ид сессии
 session = requests.Session()
-res = session.get(LOGIN_URL)
+res = session.get(LOGIN_URL, headers=headers)
+print(res.cookies.get_dict())
 
 data = {**LOGIN_DATA, **res.cookies.get_dict()}
 
-res = session.post(LOGIN_URL, params=data)
-print(res.status_code)
+res = session.post(LOGIN_URL, params=data, headers=headers, allow_redirects=False)
+for i in res.history:
+    print('tut')
+    print(i.status_code, i.url)
+#print(res.request.headers)
+
+print(res.cookies.get_dict())
+
+
 
 
 def get_domain_teams_list():
     """Все команды домена"""
     for i in range(1,10):
         url = "http://vbratske.en.cx/Teams/TeamList.aspx?page=" + str(i)
-        rr = session.get(url)
+        rr = session.get(url, headers=headers)
         soup = BeautifulSoup(rr.text, 'html.parser')
         teams = soup.find_all(id=re.compile("_lnkTeamInfo"))
         for team in teams:
@@ -51,6 +64,7 @@ def get_games_teams(soup, game_type):
     else:
         for team in teams:
             print("В этой игре учавствовал игрок: " + team.text)
+
 
 def get_winner(soup, game_type):
     print(game_type)
@@ -77,7 +91,7 @@ def get_player_rate(soup):
     """Определяет какую оценку поставил игрок в конкретной игре"""
     try:
         full_teams_list = soup.find(id='lnkTopFull')
-        res = session.get(MAIN_URL + full_teams_list['href'])
+        res = session.get(MAIN_URL + full_teams_list['href'], headers=headers)
         soup = BeautifulSoup(res.text, 'html.parser')
     except:
         pass
@@ -89,7 +103,7 @@ def get_player_rate(soup):
 
         # страхуемся что никто в команде не поставил оценку
         try:
-            res = session.get(MAIN_URL + rate_link['href'])
+            res = session.get(MAIN_URL + rate_link['href'], headers=headers)
             # player_block = res.text.split('toWinnerItem')
             soup = BeautifulSoup(res.text, 'html.parser')
             player_lines = soup.find_all(class_='toWinnerItem')
@@ -109,7 +123,7 @@ def get_teams_players(soup):
     print("\n Собираем информацию о составах команд\n")
     full_team_url = soup.find(id='lnkWinnerMembersEdit')
 
-    res = session.get(MAIN_URL + full_team_url['href'])
+    res = session.get(MAIN_URL + full_team_url['href'], headers=headers)
     page_block = res.text.split('Team:')
     team_dict = {}
     for page in page_block:
@@ -131,39 +145,46 @@ def get_teams_players(soup):
 
 def get_monitoring(soup):
     monitoring_href = soup.find(id='GameDetail_lnkMonitoring')
-    res = session.get(MAIN_URL + monitoring_href['href'])
+    res = session.get(MAIN_URL + monitoring_href['href'], headers=headers)
     page = BeautifulSoup(res.text, 'html.parser')
     pagintor = page.find_all('a', href=re.compile('Administration/Games/ActionMonitor.aspx\?gid='))
     last_page = pagintor[len(pagintor)-1].text
     i = 1
 
     code_list = []
+
+
     while i <= int(last_page):
         print(MAIN_URL + monitoring_href['href'] + '&page=' + str(i))
-        res = session.get(MAIN_URL + monitoring_href['href'] + '&page=' + str(i))
+        res = session.get(MAIN_URL + monitoring_href['href'] + '&page=' + str(i), headers=headers)
         player_block = res.text.split('padL5')
+        with open('page.html', 'w') as file:
+            file.write(res.text)
         for block in player_block:
             soup = BeautifulSoup(block, 'html.parser')
-
             try:
                 sublist = []
                 # team = soup.find(id=re.compile('lnkTeam'))
                 player = soup.find(id=re.compile('lnkUserInfo'))
                 code_type = soup.find(id=re.compile('_lblCorrectValue'))
                 code_text = soup.find_all('span', class_='nonLatinChar')
+                print(code_text[0].parent.text)
 
+                parent = code_text[0].parent.text
                 # print(player.text, code_type.text)
+                """
                 if len(code_text) > 1:
                     full_code = ''
                     for code in code_text:
                         full_code += code.text + ' '
-                    # print(one_code)
+                    print(full_code)
                 else:
                     full_code = code_text[0].text
                     # print(one_code)
+                    """
                 sublist.append(player)
                 sublist.append(code_type.text)
-                sublist.append(full_code)
+                sublist.append(parent)
                 code_list.append(sublist)
                 # print(type(code_list))
 
@@ -172,7 +193,7 @@ def get_monitoring(soup):
                 pass
         print('====================================================\n')
         i += 1
-        sleep(randint(0,2))
+        sleep(randint(2,4))
 
     return code_list
 
@@ -193,6 +214,10 @@ def get_general_game_information(soup):
 
     try:
         quality_index = soup.find(id='GameDetail_lnkGameQuality').text
+        # ебаный пиздец если игра признана не состоявшейся, а потом произошел откат
+        if quality_index == '-':
+            print('НУ ЕБАНЫ В РОТ, ДЖОКЕР!')
+            quality_index = 0.0
         print('Индекс качества игры: ', quality_index)
         game_type = 'Командная'
     except:
@@ -233,7 +258,8 @@ def get_general_game_information(soup):
 GAME_LIST_URL = "http://vbratske.en.cx/Games.aspx?page="
 for i in range(1,25):
     print("СТРАНИЦА: ", i)
-    rr = session.get(GAME_LIST_URL + str(i))
+    rr = session.get(GAME_LIST_URL + str(i), headers=headers)
+
     soup = BeautifulSoup(rr.text, 'html.parser')
     game_list = []
     games = soup.find_all(id='lnkGameTitle')
@@ -243,7 +269,9 @@ for i in range(1,25):
     for game_href in game_list:
         url = 'http://vbratske.en.cx' + game_href
         print(url)
-        res = session.get(url)
+        res = session.get(url, headers=headers)
+        with open('game.html', 'w') as i:
+            i.write(res.text)
         soup = BeautifulSoup(res.text, 'html.parser')
 
         game_title, url, game_diff, quality_index, team_count, game_type, forum_resonance, date, authors = get_general_game_information(soup)
@@ -281,7 +309,6 @@ for i in range(1,25):
                     player = Player.objects.get(name=player_name)
                     Rating.objects.get_or_create(player=player, game=game, rate=rate)
 
-
                 # если мониторинг открыт
                 try:
                     monitoring = get_monitoring(soup)
@@ -309,7 +336,7 @@ for i in range(1,25):
 
             for author in authors:
                 player = Player.objects.get(name=author.text)
-                Author.objects.create(player=player, game=game)
+                Author.objects.get_or_create(player=player, game=game)
 
 
 
@@ -318,7 +345,7 @@ for i in range(1,25):
 
 
         print('=========================================================================\n\n')
-        sleep(randint(3,9))
+        sleep(randint(5,15))
 
 
 """

@@ -17,7 +17,7 @@
 </head>
 <body>
     <nav class="navbar navbar-dark " id="navBar">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="{% url 'index' %}">
         <img src="{% static 'images/en_logo.png' %}" alt="en_logo">
       </a>
       <div class="inline">
@@ -29,13 +29,13 @@
 
     <ul class="nav nav-pills nav-fill">
       <li class="nav-item">
-        <a class="nav-link active" href="#">С 2019 года</a>
+        <a class="nav-link active" href="{% url 'index_year' year=2019 %}">С 2019 года</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">С 2018 года</a>
+        <a class="nav-link" href="{% url 'index_year' year=2018 %}">С 2018 года</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Все собранные данные</a>
+        <a class="nav-link" href="{% url 'index_year' year=1999 %}">Все собранные данные</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Статистика игрока</a>
