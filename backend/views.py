@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.http import JsonResponse, HttpResponse
+from django.shortcuts import render, render_to_response
 from datetime import datetime
 
 
@@ -89,3 +90,6 @@ def index(request, year=2019):
                                                   'year': year
 
                                                   })
+
+def sql_requests(request):
+    return HttpResponse('<p>ПРивет!</p>')
