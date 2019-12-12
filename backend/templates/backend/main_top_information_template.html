@@ -1,0 +1,49 @@
+{% load staticfiles %}
+
+
+<div id="top-list">
+    <div class="row">
+        <div class="col-4">
+            <b>Самая резонансная игра на форуме:</b>
+            {% for game in max_resonance_game %}
+                <br/>
+                <a href="{{ game.1 }}">{{ game.0 }}</a> ({{ game.2 }} сообщение)
+            {% endfor %}
+            <br/>
+        </div>
+
+        <div class="col-4">
+            <b>Самая качественная командная игра:</b>
+            {% for game in max_quality_game %}
+                <br/>
+                <a href="{{ game.1 }}">{{ game.0 }}</a> ({{ game.2 }})
+            {% endfor %}
+            <br/>
+        </div>
+        <div class="col-4">
+            <b>Топ 3 побеждающих команд: </b>
+            <br/>
+            {% for team in top3_best_team %}
+                {{ team.0 }} ({{ team.1 }})<br/>
+            {% endfor %}
+        </div>
+    </div>
+    <br/>
+
+    <div class="row">
+        <div class="col-4">
+            <b>Самая частоиграющая команда: </b>
+            <br/>
+            {% for team in top3_often_team %}
+                <a href={{ team.1 }} >{{ team.0 }}</a> ({{ team.2}})</br>
+            {% endfor %}
+        </div>
+        <div class="col-4">
+            <b>Автор с большим количество игр: </b>
+            <br/>
+                {% for author in best_authors %}
+                    {{ author.0 }} ({{ author.1 }} игр)<br/>
+                {% endfor %}
+        </div>
+    </div>
+</div>

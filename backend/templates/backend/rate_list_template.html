@@ -1,0 +1,48 @@
+{% load staticfiles %}
+
+
+<div id="players">
+
+            {{year}}
+
+
+            <div class="accordion" id="accordionExample">
+              <div class="card">
+                <div class="card-header" id="headingOne">
+
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseRate" aria-expanded="true" aria-controls="collapseOne">
+                        <b>Средняя оценка игроков (5+ игр)</b>
+                    </button>
+
+                </div>
+
+
+
+                  <div id="collapseRate" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Игрок</th>
+                          <th scope="col">Средняя оценка</th>
+                          <th scope="col">Количество оцененных игр</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                       {% for player in rate_list %}
+                        <tr>
+                            <td>{{ player.0 }}</td>
+                            <td>{{ player.2 }}</td>
+                            <td>{{ player.1 }}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+              </div>
+            </div>
+
+        </div>
+
+
+

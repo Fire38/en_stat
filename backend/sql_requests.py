@@ -282,6 +282,7 @@ def get_often_player_list(year):
                        " AND backend_game.finish_date >= '01-01-%s'"
                        " AND backend_personal_statistic.player_id = backend_player.id"
                        " GROUP BY backend_player.name"
+                       " HAVING COUNT(backend_player.name) > 1"
                        " ORDER BY count DESC", [year])
         often_player_list = cursor.fetchall()
     return often_player_list

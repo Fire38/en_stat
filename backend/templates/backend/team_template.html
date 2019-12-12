@@ -1,0 +1,72 @@
+{% load staticfiles %}
+
+
+<div id="teams">
+
+
+    <div class="accordion" id="accordionExample">
+              <div class="card">
+                <div class="card-header" id="headingOne">
+
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseFrTeam" aria-expanded="true" aria-controls="collapseOne">
+                        <b>Список частоиграющих команд</b>
+                    </button>
+
+                </div>
+
+
+                  <div id="collapseFrTeam" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <table class="table">
+                      <thead>
+                            <tr>
+                                <th scope="col">Название команды</th>
+                                <th scope="col">Количество игр</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for team in often_teams_list %}
+                            <tr>
+                                <td><a href={{ team.1 }}>{{ team.0 }}</a></td>
+                                <td>{{ team.2 }}</td>
+                            </tr>
+                            {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+              </div>
+            </div>
+
+
+
+    <div class="accordion" id="accordionExample">
+              <div class="card">
+                <div class="card-header" id="headingOne">
+
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseWinners" aria-expanded="true" aria-controls="collapseOne">
+                        <b>Список победителей</b>
+                    </button>
+
+                </div>
+
+
+                  <div id="collapseWinners" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <table class="table">
+                      <thead>
+                            <tr>
+                                <th scope="col">Название команды</th>
+                                <th scope="col">Количество побед</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for winner in winner_list %}
+                            <tr>
+                                <td>{{ winner.0 }}</td>
+                                <td>{{ winner.1 }}</td>
+                            </tr>
+                            {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+              </div>
+            </div>
+</div>

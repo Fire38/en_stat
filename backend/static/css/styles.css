@@ -37,7 +37,7 @@ body{
 }
 
 #infoBlock{
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.9);
     color: gold;
     margin-top: 10px;
     border-radius: 15px;
@@ -63,4 +63,8 @@ h2{
 
 #headingOne{
     padding-left: 0px;
+}
+
+tr, th, td{
+    border-color: gold;
 }

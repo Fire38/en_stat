@@ -1,0 +1,34 @@
+{% load staticfiles %}
+
+<div id="top-players">
+    <div class="row">
+        <div class="col-4">
+            <b>Самый частоиграющий:</b>
+            <br/>
+            {% for player in often_players %}
+                {{ player.0 }} ({{ player.1 }})<br/>
+            {% endfor %}
+        </div>
+
+        <div class="col-4">
+            <b>Самый "добрый" игрок:</b>
+            <br/>
+
+                {% for player in good_rate_players %}
+                    {{player.0}} - {{player.2}}<br/>
+                {% endfor %}
+
+        </div>
+
+        <div class="col-4">
+            <b>Самый "строгий" игрок:</b>
+            <br/>
+
+                {% for player in strict_rate_players %}
+                    {{player.0}} - {{player.2}}<br/>
+                {% endfor %}
+
+        </div>
+    </div>
+
+</div>

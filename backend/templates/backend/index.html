@@ -33,12 +33,25 @@
     <div class="container-fluid" id="infoBlock">
         <h2>Общая информация</h2>
         <hr/>
-            <div class="row">
-                <div id="stat" class="col-6">
+        {% include "backend/main_count_information_template.html" %}
+    </div>
+
+    <div class="container-fluid" id="infoBlock">
+        {% include "backend/main_top_information_template.html" %}
+    </div>
+
+    <div class="container-fluid" id="infoBlock">
+        {% include "backend/main_players_information_template.html" %}
+    </div>
+
+                    <!--
                     <b>Всего игр сыграно:</b> {{ games_count }} [?]<br/>
                     <b>Всего авторов:</b> {{ authors_count }}<br/>
                     <b>Всего команд:</b> {{ teams_count }}<br/>
                     <b>Всего игроков:</b> {{ players_count }}<br/>
+                    <b>Кодов вбито: </b>{{ codes_count.0 }}<br/>
+
+
                     <b>Самая резонансная игра на форуме:</b>
                     {% for game in max_resonance_game %}
                         <br/>
@@ -62,18 +75,15 @@
                         <a href={{ team.1 }} >{{ team.0 }}</a> ({{ team.2}})</br>
                     {% endfor %}
 
-                    <b>Кодов вбито: </b>{{ codes_count.0 }}<br/>
 
                     <b>Автор с большим количество игр: </b>
                     <br/>
                     {% for author in best_authors %}
                         {{ author.0 }} ({{ author.1 }} игр)<br/>
-                    {% endfor %}
+                    {% endfor %} -->
 
-                </div>
 
-                <div id="stat" class="col-6">
-
+                    <!--
                     <b>Самый частоиграющий:</b>
                     <br/>
                     {% for player in often_players %}
@@ -94,48 +104,51 @@
                         {% for player in strict_rate_players %}
                             {{player.0}} - {{player.2}}<br/>
                         {% endfor %}
-                    </ul>
-                </div>
-            </div>
-    </div>
+                    </ul>-->
+
+
 
     <div class="container-fluid" id="infoBlock">
         <h2>Игры</h2>
         <hr/>
         <div class="col-12">
-            {{ total_player_graphic|safe }}
+            {% include "backend/total_per_year_graphs_template.html" %}
+
+            <!--{{ total_player_graphic|safe }}-->
         </div>
+
         <div class="col-12">
-            {{ total_team_graphic|safe }}
+            <!--
+            {{ total_team_graphic|safe }}-->
         </div>
         {% if year == 2019 %}
+            <!--
             <div class="col-12">
                 {{ total_players_per_month_graphic|safe }}
             </div>
             <div class="col-12">
                 {{ total_teams_per_month_graphic|safe }}
-            </div>
+            </div>-->
+            {% include "backend/total_per_month_graphs_template.html" %}
+            {% include "backend/total_per_game_graphs_template.html" %}
+            <!--
             <div class="col-12">
                 {{ total_teams_per_game_graphic|safe }}
             </div>
             <div class="col-12">
                 {{ total_players_per_game_graphic|safe }}
-            </div>
+            </div>-->
         {% endif %}
+
+        <!--
         <div class="col-12">
             {{ forum_resonance_graph|safe }}
         </div>
         <div class="col-12">
             {{ quality_graphic|safe }}
-        </div>
-        <div>
-            <h4>Список победителей</h4>
-            <ul>
-            {% for winner in winner_list %}
-                <li>{{ winner.0 }} - {{ winner.1 }}</li>
-            {% endfor %}
-            </ul>
-        </div>
+        </div>-->
+        {% include "backend/quality_and_forum_resonance_template.html" %}
+
 
     </div>
 
@@ -194,7 +207,11 @@
     {% endfor %}
     {{ graph }}
     </div>
+
     <div class="container-fluid" id="infoBlock">
+        <h2>Команды</h2>
+        <hr/>
+        <!--
         <h2>Команды</h2>
         <hr/>
         <div>
@@ -204,21 +221,28 @@
                 <li>{{ team.0 }} - {{ team.2 }}</li>
             {% endfor %}
             </ul>
-        </div>
+        </div>-->
+        {% include "backend/often_and_winner_teams_template.html" %}
+        {% include "backend/team_template.html" %}
+
 
     </div>
 
     <div class="container-fluid" id="infoBlock">
         <h2>Игроки</h2>
         <hr/>
-        <ul>
-        {% for player in rate_list %}
-            <li>{{player.0}} ({{player.1}} игр) - {{player.2}}</li>
-        {% endfor %}
-        </ul>
+        {% include "backend/often_player_template.html" %}
+        {% include "backend/rate_list_template.html" with year=year %}
     </div>
-    <div id="test">
+
+    <div class="container-fluid" id="infoBlock">
+        <h2>Коды</h2>
+        <hr/>
 
     </div>
+    <script>
+        var year = {{ year }}
+    </script>
     <script src="{% static 'js/sql_requests.js' %}"></script>
+    <script src="{% static 'js/graphic_requests.js' %}"></script>
 {% endblock %}
