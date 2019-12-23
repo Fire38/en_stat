@@ -15,13 +15,3 @@ urlpatterns = [
     path('get_often_players_graphics', get_often_players_graphic, name='often_players_graphics'),
     path('get_often_and_winner_teams_graphics', get_often_and_winner_teams_graphic, name='often_and_winner_teams_graphic')
 ]
-
-if settings.DEBUG:
-    import debug_toolbar
-    urlpatterns = [
-        path('__debug__/', include(debug_toolbar.urls)),
-
-        # For django versions before 2.0:
-        # url(r'^__debug__/', include(debug_toolbar.urls)),
-
-    ] + urlpatterns

@@ -8,6 +8,7 @@ from .sql_requests import *
 from .graphics import *
 
 import json
+import ast
 import plotly.graph_objects as go
 import pygal
 
