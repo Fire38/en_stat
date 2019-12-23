@@ -44,195 +44,870 @@
         {% include "backend/main_players_information_template.html" %}
     </div>
 
-                    <!--
-                    <b>Всего игр сыграно:</b> {{ games_count }} [?]<br/>
-                    <b>Всего авторов:</b> {{ authors_count }}<br/>
-                    <b>Всего команд:</b> {{ teams_count }}<br/>
-                    <b>Всего игроков:</b> {{ players_count }}<br/>
-                    <b>Кодов вбито: </b>{{ codes_count.0 }}<br/>
-
-
-                    <b>Самая резонансная игра на форуме:</b>
-                    {% for game in max_resonance_game %}
-                        <br/>
-                        <a href="{{ game.1 }}">{{ game.0 }}</a> ({{ game.2 }} сообщение)
-                    {% endfor %}<br/>
-                    <b>Самая качественная командная игра:</b>
-                    {% for game in max_quality_game %}
-                        <br/>
-                        <a href="{{ game.1 }}">{{ game.0 }}</a> ({{ game.2 }})
-                    {% endfor %}<br/>
-
-                    <b>Топ 3 побеждающих команд: </b>
-                    <br/>
-                    {% for team in top3_best_team %}
-                        {{ team.0 }} ({{ team.1 }})<br/>
-                    {% endfor %}
-
-                    <b>Самая частоиграющая команда: </b>
-                    <br/>
-                    {% for team in top3_often_team %}
-                        <a href={{ team.1 }} >{{ team.0 }}</a> ({{ team.2}})</br>
-                    {% endfor %}
-
-
-                    <b>Автор с большим количество игр: </b>
-                    <br/>
-                    {% for author in best_authors %}
-                        {{ author.0 }} ({{ author.1 }} игр)<br/>
-                    {% endfor %} -->
-
-
-                    <!--
-                    <b>Самый частоиграющий:</b>
-                    <br/>
-                    {% for player in often_players %}
-                        {{ player.0 }} ({{ player.1 }})<br/>
-                    {% endfor %}
-
-                    <b>Самый "добрый" игрок:</b>
-                    <br/>
-                    <ul>
-                    {% for player in good_rate_players %}
-                        {{player.0}} - {{player.2}}<br/>
-                    {% endfor %}
-                    </ul>
-
-                    <b>Самый "злой" игрок:</b>
-                    <br/>
-                    <ul>
-                        {% for player in strict_rate_players %}
-                            {{player.0}} - {{player.2}}<br/>
-                        {% endfor %}
-                    </ul>-->
-
-
-
     <div class="container-fluid" id="infoBlock">
         <h2>Игры</h2>
         <hr/>
         <div class="col-12">
-            {% include "backend/total_per_year_graphs_template.html" %}
+            <div id="1"></div>
+            <br/>
+            <br/>
+            <div id="2"></div>
+            <br/>
+            <br/>
+            <div id="3"></div>
+            <br/>
+            <br/>
+            <div id="4"></div>
+            <br/>
+            <br/>
+            <div id="5"></div>
+            <br/>
+            <br/>
+            <div id="6"></div>
+            <br/>
+            <br/>
+            <div id="7"></div>
+            <br/>
+            <br/>
+            <div id="8"></div>
+            <script>
+                Highcharts.chart('1', {
+                    chart: {
 
-            <!--{{ total_player_graphic|safe }}-->
+                        backgroundColor: {
+                            color: [0, 0, 0, 0],
+                            stops: [
+                                [0, 'rgb(255, 255, 255)'],
+                                [1, 'rgb(240, 240, 255)']
+                            ]
+                        },
+                    },
+                    title: {
+                        style: { color: 'gold'},
+                        text: 'Количество игроков по годам'
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        lineColor: 'gold',
+                        labels: {
+                            style: {
+                                color: 'gold'
+                            }
+                        },
+                        categories: [
+                        {% for entry in total_players_per_year %} '{{ entry.year }}' {% if not forloop.last %}, {% endif %} {% endfor %}
+                        ],
+
+                    },
+
+                    yAxis: {
+
+                        title: {
+                            text: 'Количество игроков',
+                            style: {
+                                color: 'gold'
+                            }
+                        },
+                        labels: {
+                            style: {
+                                color: 'gold'
+                            }
+                        },
+                    },
+                    series: [{
+                        name: 'Количество игроков',
+                        data: [{% for entry in total_players_per_year %} {{ entry.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
+                        color: "gold"
+                    }]
+                });
+            </script>
+
+            <script>
+                Highcharts.chart('2', {
+                    chart: {
+
+                        backgroundColor: {
+                            color: [0, 0, 0, 0],
+                            stops: [
+                                [0, 'rgb(255, 255, 255)'],
+                                [1, 'rgb(240, 240, 255)']
+                            ]
+                        },
+                    },
+                    title: {
+                        style: { color: 'gold'},
+                        text: 'Количество команд по годам'
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        lineColor: 'gold',
+                        labels: {
+                            style: {
+                                color: 'gold'
+                            }
+                        },
+                        categories: [
+                        {% for entry in total_teams_per_year %} '{{ entry.year }}' {% if not forloop.last %}, {% endif %} {% endfor %}
+                        ],
+
+                    },
+
+                    yAxis: {
+
+                        title: {
+                            text: 'Количество команд',
+                            style: {
+                                color: 'gold'
+                            }
+                        },
+                        labels: {
+                            style: {
+                                color: 'gold'
+                            }
+                        },
+                    },
+                    series: [{
+                        name: 'Количество команд',
+                        data: [{% for entry in total_teams_per_year %} {{ entry.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
+                        color: "gold"
+                    }]
+                });
+            </script>
         </div>
 
-        <div class="col-12">
-            <!--
-            {{ total_team_graphic|safe }}-->
-        </div>
-        {% if year == 2019 %}
-            <!--
-            <div class="col-12">
-                {{ total_players_per_month_graphic|safe }}
-            </div>
-            <div class="col-12">
-                {{ total_teams_per_month_graphic|safe }}
-            </div>-->
-            {% include "backend/total_per_month_graphs_template.html" %}
-            {% include "backend/total_per_game_graphs_template.html" %}
-            <!--
-            <div class="col-12">
-                {{ total_teams_per_game_graphic|safe }}
-            </div>
-            <div class="col-12">
-                {{ total_players_per_game_graphic|safe }}
-            </div>-->
+         {% if year == 2019 %}
+            <script>
+                Highcharts.chart('3', {
+                    chart: {
+
+                        backgroundColor: {
+                            color: [0, 0, 0, 0],
+                            stops: [
+                                [0, 'rgb(255, 255, 255)'],
+                                [1, 'rgb(240, 240, 255)']
+                            ]
+                        },
+                    },
+                    title: {
+                        style: { color: 'gold'},
+                        text: 'Количество команд по месяцам(2019)'
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        lineColor: 'gold',
+                        labels: {
+                            style: {
+                                color: 'gold'
+                            }
+                        },
+                        categories: [
+                        {% for entry in total_teams_per_month %} '{{ entry.year }}' {% if not forloop.last %}, {% endif %} {% endfor %}
+                        ],
+
+                    },
+
+                    yAxis: {
+
+                        title: {
+                            text: 'Количество команд',
+                            style: {
+                                color: 'gold'
+                            }
+                        },
+                        labels: {
+                            style: {
+                                color: 'gold'
+                            }
+                        },
+                    },
+                    series: [{
+                        name: 'Количество команд',
+                        data: [{% for entry in total_teams_per_month %} {{ entry.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
+                        color: "gold"
+                    }]
+                });
+            </script>
+
+            <script>
+                Highcharts.chart('4', {
+                    chart: {
+
+                        backgroundColor: {
+                            color: [0, 0, 0, 0],
+                            stops: [
+                                [0, 'rgb(255, 255, 255)'],
+                                [1, 'rgb(240, 240, 255)']
+                            ]
+                        },
+                    },
+                    title: {
+                        style: { color: 'gold'},
+                        text: 'Количество игроков по месяцам(2019)'
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        lineColor: 'gold',
+                        labels: {
+                            style: {
+                                color: 'gold'
+                            }
+                        },
+                        categories: [
+                        {% for entry in total_players_per_month %} '{{ entry.year }}' {% if not forloop.last %}, {% endif %} {% endfor %}
+                        ],
+
+                    },
+
+                    yAxis: {
+
+                        title: {
+                            text: 'Количество игроков',
+                            style: {
+                                color: 'gold'
+                            }
+                        },
+                        labels: {
+                            style: {
+                                color: 'gold'
+                            }
+                        },
+                    },
+                    series: [{
+                        name: 'Количество игроков',
+                        data: [{% for entry in total_players_per_month %} {{ entry.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
+                        color: "gold"
+                    }]
+                });
+            </script>
+
+            <script>
+                Highcharts.chart('5', {
+                    chart: {
+
+                        backgroundColor: {
+                            color: [0, 0, 0, 0],
+                            stops: [
+                                [0, 'rgb(255, 255, 255)'],
+                                [1, 'rgb(240, 240, 255)']
+                            ]
+                        },
+                        type: 'column'
+                    },
+
+                    title: {
+                        style: { color: 'gold'},
+                        text: 'Количество команд по играм'
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        lineColor: 'gold',
+                        labels: {
+                            style: {
+                                color: 'gold'
+                            }
+                        },
+                        categories: [
+                        {% for entry in total_teams_per_game %} '{{ entry.name }}' {% if not forloop.last %}, {% endif %} {% endfor %}
+                        ],
+
+                    },
+
+                    yAxis: {
+
+                        title: {
+                            text: 'Количество команд',
+                            style: {
+                                color: 'gold'
+                            }
+                        },
+                        labels: {
+                            style: {
+                                color: 'gold'
+                            }
+                        },
+                    },
+                    series: [{
+                        name: 'Количество команд',
+                        data: [{% for entry in total_teams_per_game %} {{ entry.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
+                        color: "gold"
+                    }]
+                });
+            </script>
+
+            <script>
+                Highcharts.chart('6', {
+                    chart: {
+
+                        backgroundColor: {
+                            color: [0, 0, 0, 0],
+                            stops: [
+                                [0, 'rgb(255, 255, 255)'],
+                                [1, 'rgb(240, 240, 255)']
+                            ]
+                        },
+                        type: 'column'
+                    },
+
+                    title: {
+                        style: { color: 'gold'},
+                        text: 'Количество энщиков по играм'
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        lineColor: 'gold',
+                        labels: {
+                            style: {
+                                color: 'gold'
+                            }
+                        },
+                        categories: [
+                        {% for entry in total_players_per_game %} '{{ entry.name }}' {% if not forloop.last %}, {% endif %} {% endfor %}
+                        ],
+
+                    },
+
+                    yAxis: {
+
+                        title: {
+                            text: 'Количество игроков',
+                            style: {
+                                color: 'gold'
+                            }
+                        },
+                        labels: {
+                            style: {
+                                color: 'gold'
+                            }
+                        },
+                    },
+                    series: [{
+                        name: 'Количество игроков',
+                        data: [{% for entry in total_players_per_game %} {{ entry.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
+                        color: "gold"
+                    }]
+                });
+            </script>
         {% endif %}
 
-        <!--
-        <div class="col-12">
-            {{ forum_resonance_graph|safe }}
-        </div>
-        <div class="col-12">
-            {{ quality_graphic|safe }}
-        </div>-->
-        {% include "backend/quality_and_forum_resonance_template.html" %}
+        <script>
+            Highcharts.chart('7', {
+                chart: {
 
+                    backgroundColor: {
+                        color: [0, 0, 0, 0],
+                        stops: [
+                            [0, 'rgb(255, 255, 255)'],
+                            [1, 'rgb(240, 240, 255)']
+                        ]
+                    },
+                    type: 'column'
+                },
 
+                title: {
+                    style: { color: 'gold'},
+                    text: 'Самые резонансные на форуме игры (топ 30)'
+                },
+                legend: {
+                    enabled: false
+                },
+                xAxis: {
+                    lineColor: 'gold',
+                    labels: {
+                        style: {
+                            color: 'gold'
+                        }
+                    },
+                    categories: [
+                    {% for entry in top_forum_resonance_game %} '{{ entry.name }}' {% if not forloop.last %}, {% endif %} {% endfor %}
+                    ],
+
+                },
+
+                yAxis: {
+
+                    title: {
+                        text: 'Количество сообщений',
+                        style: {
+                            color: 'gold'
+                        }
+                    },
+                    labels: {
+                        style: {
+                            color: 'gold'
+                        }
+                    },
+                },
+                series: [{
+                    name: 'Количество сообщений',
+                    data: [{% for entry in top_forum_resonance_game %} {{ entry.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
+                    color: "gold"
+                }]
+            });
+        </script>
+        <script>
+            Highcharts.chart('8', {
+                chart: {
+
+                    backgroundColor: {
+                        color: [0, 0, 0, 0],
+                        stops: [
+                            [0, 'rgb(255, 255, 255)'],
+                            [1, 'rgb(240, 240, 255)']
+                        ]
+                    },
+                    type: 'column'
+                },
+
+                title: {
+                    style: { color: 'gold'},
+                    text: 'Качество игр'
+                },
+                legend: {
+                    enabled: false
+                },
+                xAxis: {
+                    lineColor: 'gold',
+                    labels: {
+                        style: {
+                            color: 'gold'
+                        }
+                    },
+                    categories: [
+                    {% for entry in quality_game_list %} '{{ entry.name }}' {% if not forloop.last %}, {% endif %} {% endfor %}
+                    ],
+
+                },
+
+                yAxis: {
+
+                    title: {
+                        text: 'Индекс качества игры',
+                        style: {
+                            color: 'gold'
+                        }
+                    },
+                    labels: {
+                        style: {
+                            color: 'gold'
+                        }
+                    },
+                },
+                series: [{
+                    name: 'Индекс качества игры',
+                    data: [{% for entry in quality_game_list %} {{ entry.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
+                    color: "gold"
+                }]
+            });
+        </script>
     </div>
+
+
 
     <div class="container-fluid" id="infoBlock">
         <h2>Авторы</h2>
         <hr/>
-        <div class="col-12">
-            {{ div|safe }}
-        </div>
+        <div id="9"></div>
+        <script>
+            Highcharts.chart('9', {
+                chart: {
+                    backgroundColor: {
+                        color: [0, 0, 0, 0],
+                        stops: [
+                            [0, 'rgb(255, 255, 255)'],
+                            [1, 'rgb(240, 240, 255)']
+                        ]
+                    },
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Количество игр',
+                    style: { color: 'gold'},
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                },
+                plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>'
+                    }
+                }
+                },
+                series: [{
+                    name: 'Brands',
+                    colorByPoint: true,
+                    data: [{% for entry in authors_and_games %}{name: '{{ entry.name}}', y: {{ entry.value }} }{% if not forloop.last %}, {% endif %}{% endfor %}]
+                }]
+            });
+        </script>
+
+
 
         <div class="accordion" id="accordionExample">
-          <div class="card">
-            <div class="card-header" id="headingOne">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <b>Список авторов</b>
+                    </button>
+                </div>
 
-                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    <b>Список авторов</b>
-                </button>
-
-            </div>
-
-
-
-              <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                <table class="table">
-                  <thead>
-                    <tr>
-
-                      <th scope="col">Автор</th>
-                      <th scope="col">Игры</th>
-
-                    </tr>
-                  </thead>
-                  <tbody>
-
-                    {% for author, values in authors_dict.items %}
-                        <tr>
-                            <td> <b>{{ author }}</b></td>
-                            <td>
-                            {% for v in values %}
-                                <div><a href="{{ v.1 }}">{{ v.0 }}</a></div>
+                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Автор</th>
+                                <th scope="col">Игры</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for author, values in authors_dict.items %}
+                                <tr>
+                                    <td> <b>{{ author }}</b></td>
+                                    <td>
+                                    {% for v in values %}
+                                        <div>
+                                            <a href="{{ v.1 }}">
+                                                {{ v.0 }}
+                                            </a>
+                                        </div>
+                                    {% endfor %}
+                                    </td>
+                                </tr>
                             {% endfor %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-          </div>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
-
-
-    <br/>
-    {% for author in authors %}
-    {{ author.player.name }}<br/>
-    {% endfor %}
-    {{ graph }}
-    </div>
 
     <div class="container-fluid" id="infoBlock">
         <h2>Команды</h2>
         <hr/>
-        <!--
-        <h2>Команды</h2>
-        <hr/>
-        <div>
-            <h4>Список частоиграющих команд</h4>
-            <ul>
-            {% for team in often_teams_list %}
-                <li>{{ team.0 }} - {{ team.2 }}</li>
-            {% endfor %}
-            </ul>
-        </div>-->
-        {% include "backend/often_and_winner_teams_template.html" %}
-        {% include "backend/team_template.html" %}
+        <div id="10"></div>
+        <div id="11"></div>
+
+        <script>
+            Highcharts.chart('10', {
+                chart: {
+
+                    backgroundColor: {
+                        color: [0, 0, 0, 0],
+                        stops: [
+                            [0, 'rgb(255, 255, 255)'],
+                            [1, 'rgb(240, 240, 255)']
+                        ]
+                    },
+                    type: 'column'
+                },
+                title: {
+                    style: { color: 'gold'},
+                    text: 'Количество побед по командам'
+                },
+                legend: {
+                    enabled: false
+                },
+                xAxis: {
+                    lineColor: 'gold',
+                    labels: {
+                        style: {
+                            color: 'gold'
+                        }
+                    },
+                    categories: [
+                    {% for team in dataset %} '{{ team.name }}' {% if not forloop.last %}, {% endif %} {% endfor %}
+                    ],
+
+                },
+
+                yAxis: {
+
+                    title: {
+                        text: 'Количество побед',
+                        style: {
+                            color: 'gold'
+                        }
+                    },
+                    labels: {
+                        style: {
+                            color: 'gold'
+                        }
+                    },
+                },
+                series: [{
+                    name: 'Количество',
+                    data: [{% for team in dataset %} {{ team.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
+                    color: "gold"
+                }]
+            });
+        </script>
+
+        <script>
+            Highcharts.chart('11', {
+                chart: {
+                    backgroundColor: {
+                        color: [0, 0, 0, 0],
+                        stops: [
+                            [0, 'rgb(255, 255, 255)'],
+                            [1, 'rgb(240, 240, 255)']
+                        ]
+                    },
+                    type: 'bar'
+                },
+                title: {
+                    style: { color: 'gold'},
+                    text: 'Топ 30 по частоте игр'
+                },
+                legend: {
+                    enabled: false
+                },
+                xAxis: {
+                    lineColor: 'gold',
+                    labels: {
+                        style: {
+                            color: 'gold'
+                        }
+                    },
+                    categories: [
+                    {% for team in dataset2 %} '{{ team.name }}' {% if not forloop.last %}, {% endif %} {% endfor %}
+                    ],
+
+                },
+
+                yAxis: {
+
+                    title: {
+                        text: 'Количество игр',
+                        style: {
+                            color: 'gold'
+                        }
+                    },
+                    labels: {
+                        style: {
+                            color: 'gold'
+                        }
+                    },
+                },
+
+                series: [{
+                    name: 'Количество',
+                    data: [{% for team in dataset2 %} {{ team.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
+                    color: "gold"
+                }]
+            });
+        </script>
+
+        <div class="accordion" id="accordionExample">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseFrTeam" aria-expanded="true" aria-controls="collapseOne">
+                        <b>Список частоиграющих команд</b>
+                    </button>
+
+                </div>
 
 
+                <div id="collapseFrTeam" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Название команды</th>
+                                <th scope="col">Количество игр</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for team in often_teams_list %}
+                            <tr>
+                                <td><a href={{ team.1 }}>{{ team.0 }}</a></td>
+                                <td>{{ team.2 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="accordion" id="accordionExample">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseWinners" aria-expanded="true" aria-controls="collapseOne">
+                        <b>Список победителей</b>
+                    </button>
+
+                </div>
+
+
+                <div id="collapseWinners" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Название команды</th>
+                                <th scope="col">Количество побед</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for winner in winner_list %}
+                                <tr>
+                                    <td>{{ winner.0 }}</td>
+                                    <td>{{ winner.1 }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
+
 
     <div class="container-fluid" id="infoBlock">
         <h2>Игроки</h2>
         <hr/>
-        {% include "backend/often_player_template.html" %}
-        {% include "backend/rate_list_template.html" with year=year %}
+        <div id="12"></div>
+        <script>
+            Highcharts.chart('12', {
+                chart: {
+                    backgroundColor: {
+                        color: [0, 0, 0, 0],
+                        stops: [
+                            [0, 'rgb(255, 255, 255)'],
+                            [1, 'rgb(240, 240, 255)']
+                        ]
+                    },
+                    type: 'column'
+                },
+                title: {
+                    style: { color: 'gold'},
+                    text: 'Количество сыгранных игр (топ 50)'
+                },
+                legend: {
+                    enabled: false
+                },
+                xAxis: {
+                    lineColor: 'gold',
+                    labels: {
+                        style: {
+                            color: 'gold'
+                        }
+                    },
+                    categories: [
+                    {% for player in frequency_player_list %} '{{ player.name }}' {% if not forloop.last %}, {% endif %} {% endfor %}
+                    ],
+
+                },
+
+                yAxis: {
+
+                    title: {
+                        text: 'Количество игр',
+                        style: {
+                            color: 'gold'
+                        }
+                    },
+                    labels: {
+                        style: {
+                            color: 'gold'
+                        }
+                    },
+                },
+
+                series: [{
+                    name: 'Количество игр',
+                    data: [{% for player in frequency_player_list %} {{ player.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
+                    color: "gold"
+                }]
+            });
+        </script>
+        <br/>
+
+        <div class="accordion" id="accordionExample">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseFrequency" aria-expanded="true" aria-controls="collapseOne">
+                        <b>Частоиграющие энщики (> 1 игры)</b>
+                    </button>
+                </div>
+            </div>
+            <div id="collapseFrequency" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Игрок</th>
+                            <th scope="col">Количество игр</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for player in often_players_table %}
+                            <tr>
+                                <td>{{ player.0 }}</td>
+                                <td>{{ player.1 }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="accordion" id="accordionExample">
+              <div class="card">
+                <div class="card-header" id="headingOne">
+
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseRate" aria-expanded="true" aria-controls="collapseOne">
+                        <b>Средняя оценка игроков (5+ игр)</b>
+                    </button>
+
+                </div>
+
+
+
+                  <div id="collapseRate" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Игрок</th>
+                          <th scope="col">Средняя оценка</th>
+                          <th scope="col">Количество оцененных игр</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                       {% for player in rate_list %}
+                        <tr>
+                            <td>{{ player.0 }}</td>
+                            <td>{{ player.2 }}</td>
+                            <td>{{ player.1 }}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+              </div>
+            </div>
     </div>
 
     <div class="container-fluid" id="infoBlock">

@@ -7,88 +7,171 @@ from .models import *
 from .sql_requests import *
 from .graphics import *
 
+import json
 import plotly.graph_objects as go
+import pygal
 
 CURRENT_YEAR_START = datetime.strptime('01/1/2019', '%m/%d/%Y').date()
 
 
 # Create your views here.
 def index(request, year=2019):
-    #games_count = get_games_count(year)
-    #authors_count = get_authors_count(year)
-    #players_count = get_players_count(year)
-    #teams_count = get_teams_count(year)
+    total_players_per_year_list = get_total_players_per_year()
+    years_dict = []
+    for y in total_players_per_year_list:
+        temp_dict = {
+            'value': y[0],
+            'year': int(y[1])
+        }
+        years_dict.append(temp_dict)
+    json_players_per_year = ast.literal_eval(json.dumps(years_dict, ensure_ascii=False))
 
-    #max_resonance_game = get_max_forum_resonance(year)
-    #max_quality_game = get_best_game_quality(year)
+    total_teams_per_year_list = get_total_teams_per_year()
+    years_dict = []
+    for team in total_teams_per_year_list:
+        temp_dict = {
+            'value': team[0],
+            'year': int(team[1])
+        }
+        years_dict.append(temp_dict)
+    json_teams_per_year = ast.literal_eval(json.dumps(years_dict, ensure_ascii=False))
 
-    #best_team_list = get_best_team_list(year)
-    #top3_best_team = best_team_list[:3]
+    total_teams_per_month_list = get_total_teams_per_month(year)
+    month_dict = []
+    for team in total_teams_per_month_list:
+        temp_dict = {
+            'value': team[0],
+            'month': int(team[1])
+        }
+        month_dict.append(temp_dict)
+    json_teams_per_month = ast.literal_eval(json.dumps(month_dict, ensure_ascii=False))
 
-    #codes_count = get_code_count(year)
+    total_players_per_month_list = get_total_players_per_month(year)
+    month_dict = []
+    for y in total_players_per_month_list:
+        temp_dict = {
+            'value': y[0],
+            'year': int(y[1])
+        }
+        month_dict.append(temp_dict)
+    json_players_per_month = ast.literal_eval(json.dumps(month_dict, ensure_ascii=False))
 
-    #authors_and_game_count_list = get_all_authors_and_count_game(year)
-    #top3_authors = authors_and_game_count_list[:3]
-    authors_dict = get_author_and_his_games(year)
-    #often_player_list = get_often_player_list(year)
-    #often_players = often_player_list[:3]
-    #often_teams_list = get_often_team(year)
-    #top3_often_teams = often_teams_list[:3]
-    # print(often_team)
+    total_teams_per_game_list = get_total_teams_per_game(year)
+    games_dict = []
+    for game in total_teams_per_game_list:
+        temp_dict = {
+            'name': game[0],
+            'value': int(game[1])
+        }
+        games_dict.append(temp_dict)
+    json_teams_per_game = ast.literal_eval(json.dumps(games_dict, ensure_ascii=False))
 
-    #rate_list = get_players_rate_list(year)
-    #good_rate_players = rate_list[:5]
-    #strict_rate_players = rate_list[-5:]
+    total_players_per_game_list = get_total_players_per_game(year)
+    games_dict = []
+    for game in total_players_per_game_list:
+        temp_dict = {
+            'name': game[0],
+            'value': int(game[1])
+        }
+        games_dict.append(temp_dict)
+    json_players_per_game = ast.literal_eval(json.dumps(games_dict, ensure_ascii=False))
 
+    forum_resonance_list = get_top_forum_resonance(year)[:30]
+    games_dict = []
+    for game in forum_resonance_list:
+        temp_dict = {
+            'name': game[0],
+            'value': int(game[1])
+        }
+        games_dict.append(temp_dict)
+    json_forum_resonance = ast.literal_eval(json.dumps(games_dict, ensure_ascii=False))
 
-    div = author_graph(year)
-    #forum_resonance_graphic = forum_resonance_bar(year)
-    #quality_graphic = quality_top_bar(year)
-    #total_player_per_year_graphic = total_players_per_year_bar()
-    #total_team_per_year_graphic = total_teams_per_year_bar()
+    quality_game_list = get_top_game_quality(year)
+    games_dict = []
+    for game in quality_game_list:
+        temp_dict = {
+            'name': game[0],
+            'value': int(game[1])
+        }
+        games_dict.append(temp_dict)
+    json_quality_game_list = ast.literal_eval(json.dumps(games_dict, ensure_ascii=False))
 
-    """
-    if year == 2019:
-        #total_players_per_month_graphic = total_teams_per_month_bar(year)
-        #total_teams_per_month_graphic = total_players_per_month_scatter(year)
-        #total_teams_per_game_graphic = total_teams_per_game_bar(year)
-        #total_players_per_game_graphic = total_players_per_game_bar(year)
-    else:
-        total_players_per_month_graphic = 0
-        total_teams_per_month_graphic = 0
-        total_teams_per_game_graphic = 0
-        total_players_per_game_graphic = 0"""
-    return render(request, 'backend/index.html', {#'games_count': games_count,
-                                                  #'authors_count': authors_count,
-                                                  #'players_count': players_count,
-                                                  #'teams_count': teams_count,
-                                                  #'max_resonance_game': max_resonance_game,
-                                                  #'max_quality_game': max_quality_game,
-                                                  #'top3_best_team': top3_best_team,
-                                                  #'winner_list': best_team_list,
-                                                  #'codes_count': codes_count,
-                                                  #'best_authors': top3_authors,
-                                                  'authors_dict': authors_dict,
-                                                  #'often_players': often_players,
-                                                  #'often_player_list': often_player_list,
-                                                  #'often_teams_list': often_teams_list,
-                                                  #'top3_often_team': top3_often_teams,
-                                                  #'rate_list': rate_list,
-                                                  #'good_rate_players': good_rate_players,
-                                                  #'strict_rate_players': strict_rate_players,
-
-                                                  'div': div,
-                                                  #'forum_resonance_graph': forum_resonance_graphic,
-                                                  #'quality_graphic': quality_graphic,
-                                                  #'total_player_graphic': total_player_per_year_graphic,
-                                                  #'total_players_per_month_graphic': total_players_per_month_graphic,
-                                                  #'total_team_graphic': total_team_per_year_graphic,
-                                                  #'total_teams_per_month_graphic': total_teams_per_month_graphic,
-                                                  #'total_teams_per_game_graphic': total_teams_per_game_graphic,
-                                                  #'total_players_per_game_graphic': total_players_per_game_graphic,
+    frequency_player_list = get_often_player_list(year)[:50]
+    players_dict = []
+    for player in frequency_player_list:
+        temp_dict = {
+            'name': player[0],
+            'value': int(player[1])
+        }
+        players_dict.append(temp_dict)
+    json_frequency_player_list = ast.literal_eval(json.dumps(players_dict, ensure_ascii=False))
 
 
-                                                  'year': year
+
+    authors_and_games_list = get_all_authors_and_count_game(year)
+    authors_dict = []
+    for author in authors_and_games_list:
+        temp_dict = {
+            'name': author[0],
+            'value': author[1]
+        }
+        authors_dict.append(temp_dict)
+    json_authors_and_games_list = ast.literal_eval(json.dumps(authors_dict, ensure_ascii=False))
+
+    authors_games_dict = get_author_and_his_games(year)
+
+
+    best_team_list = get_best_team_list(2019)
+    teams_dict = []
+    for team in best_team_list:
+        temp_dict = {
+            'name': team[0],
+            'value': team[1]
+        }
+        teams_dict.append(temp_dict)
+
+    frequency_team_list = get_often_team(2019)[:20]
+    often_dict = []
+    for team in frequency_team_list:
+        temp_dict = {
+            'name': team[0],
+            'url': team[1],
+            'value': team[2]
+        }
+        often_dict.append(temp_dict)
+
+    json_string_winner = ast.literal_eval(json.dumps(teams_dict, ensure_ascii=False))
+    json_string_frequency_team = ast.literal_eval(json.dumps(often_dict, ensure_ascii=False))
+
+
+
+    often_players_table = get_often_player_list(year)
+    rate_list = get_players_rate_list(year)
+    often_teams_list = get_often_team(year)
+    best_team_list = get_best_team_list(year)
+
+
+    return render(request, 'backend/index.html', {'total_players_per_year': json_players_per_year,
+                                                  'total_teams_per_year': json_teams_per_year,
+                                                  'total_teams_per_month': json_teams_per_month,
+                                                  'total_players_per_month': json_players_per_month,
+                                                  'total_teams_per_game': json_teams_per_game,
+                                                  'total_players_per_game': json_players_per_game,
+                                                  'top_forum_resonance_game': json_forum_resonance,
+                                                  'quality_game_list': json_quality_game_list,
+                                                  'frequency_player_list': json_frequency_player_list,
+                                                  'authors_and_games': json_authors_and_games_list,
+                                                  'authors_dict': authors_games_dict,
+
+                                                  'often_players_table': often_players_table,
+                                                  'rate_list': rate_list,
+                                                  'often_teams_list': often_teams_list,
+                                                  'winner_list': best_team_list,
+
+
+                                                  'dataset': json_string_winner,
+                                                  'dataset2': json_string_frequency_team,
+                                                  'year': year,
 
                                                   })
 
@@ -143,56 +226,6 @@ def get_main_players_information(request, year=2019):
                                                                                         'often_players': often_players
                                                                                         })
 
-def get_rating_information(request, year=2019):
-    year = int(request.GET.get('year'))
-    rate_list = get_players_rate_list(year)
-    return render_to_response('backend/rate_list_template.html', context={'rate_list': rate_list})
-
-
-def get_team_information(request, year=2019):
-    year = int(request.GET.get('year'))
-    often_teams_list = get_often_team(year)
-    best_team_list = get_best_team_list(year)
-
-    return render_to_response('backend/team_template.html', context={'often_teams_list': often_teams_list,
-                                                                     'winner_list': best_team_list
-                                                                     })
-
-
-def get_total_players_per_year_graphic(request, year=2019):
-    total_player_per_year_graphic = total_players_per_year_bar()
-    total_team_per_year_graphic = total_teams_per_year_bar()
-    return render_to_response('backend/total_per_year_graphs_template.html', context={'total_player_graphic': total_player_per_year_graphic,
-                                                                                       'total_team_graphic': total_team_per_year_graphic
-                                                                                       })
-
-
-def get_total_players_per_month_graphic(request, year=2019):
-    year = int(request.GET.get('year'))
-    total_players_per_month_graphic = total_teams_per_month_bar(year)
-    total_teams_per_month_graphic = total_players_per_month_scatter(year)
-    return render_to_response('backend/total_per_month_graphs_template.html', context={'total_players_per_month_graphic': total_players_per_month_graphic,
-                                                                                       'total_teams_per_month_graphic': total_teams_per_month_graphic
-                                                                                       })
-
-
-def get_total_players_per_game_graphic(request, year=2019):
-    year = int(request.GET.get('year'))
-    total_teams_per_game_graphic = total_teams_per_game_bar(year)
-    total_players_per_game_graphic = total_players_per_game_bar(year)
-    return render_to_response('backend/total_per_game_graphs_template.html', context={'total_teams_per_game_graphic': total_teams_per_game_graphic,
-                                                                                      'total_players_per_game_graphic': total_players_per_game_graphic
-                                                                                      })
-
-
-def get_quality_and_forum_resonance_graphic(request, year=2019):
-    year = int(request.GET.get('year'))
-    forum_resonance_graphic = forum_resonance_bar(year)
-    quality_graphic = quality_top_bar(year)
-    return render_to_response('backend/quality_and_forum_resonance_template.html', context={'forum_resonance_graph': forum_resonance_graphic,
-                                                                                            'quality_graphic': quality_graphic,
-                                                                                        })
-
 
 def get_often_players_graphic(request, year=2019):
     # топ 30 самых частоиграющих + полная таблица
@@ -205,8 +238,11 @@ def get_often_players_graphic(request, year=2019):
 
 
 def get_often_and_winner_teams_graphic(request, year=2019):
-    """графики (топ 20) побед и частотоигрющих команд"""
-    year = int(request.GET.get('year'))
+    #графики (топ 20) побед и частотоигрющих команд
+    try:
+        year = int(request.GET.get('year'))
+    except:
+        pass
     often_team_graphic = often_team_bar(year)
     winner_team_graphic = winner_team_bar(year)
     best_team_list = get_best_team_list(year)
@@ -216,3 +252,6 @@ def get_often_and_winner_teams_graphic(request, year=2019):
                                                                                        'often_team_graph': often_team_graphic,
                                                                                        'winner_team_graph': winner_team_graphic
                                                                                         })
+
+
+

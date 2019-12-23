@@ -10,6 +10,7 @@ import locale
 locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
 import calendar
 
+
 def author_graph(year):
     a = get_all_authors_and_count_game(year)
     colors = ['black',] * len(a)
@@ -46,8 +47,8 @@ def forum_resonance_bar(year):
 
     fig = go.Figure(
         data=[go.Bar(
-            x=name,
-            y=count,
+            x=name[:30],
+            y=count[:30],
             name='График',
             opacity=1,
             marker={
@@ -59,7 +60,7 @@ def forum_resonance_bar(year):
         )],
         layout=go.Layout(
             title={
-                'text': 'Количество сообщений в каждой игре',
+                'text': 'Количество сообщений в каждой игре (топ-30)',
                 'font':{
                     'size': 20,
                     'color': 'gold'
@@ -91,8 +92,8 @@ def quality_top_bar(year):
 
     fig = go.Figure(
         data = [go.Bar(
-            x=names,
-            y=quality,
+            x=names[:30],
+            y=quality[:30],
             marker={
                 'line':{
                     'color': 'rgba(0,0,0,1)',
@@ -102,7 +103,7 @@ def quality_top_bar(year):
         )],
         layout=go.Layout(
             title={
-                'text': 'Качество игр',
+                'text': 'Качество игр (топ-30)',
                 'font': {
                     'size': 20,
                     'color': 'gold'
@@ -304,8 +305,8 @@ def total_teams_per_game_bar(year):
     fig = go.Figure(
         data = [
             go.Bar(
-                x=count,
-                y=games,
+                x=count[:30],
+                y=games[:30],
                 marker={
                     'line':{
                         'color': 'rgba(0,0,0,1)',
@@ -316,7 +317,7 @@ def total_teams_per_game_bar(year):
         ],
         layout=go.Layout(
             title={
-                'text': 'Количество команд по играм (' + str(period) + ' год)',
+                'text': 'Количество команд по играм (' + str(period) + ' год, топ-30)',
                 'font': {
                     'size': 20,
                     'color': 'gold'
@@ -347,8 +348,8 @@ def total_players_per_game_bar(year):
     fig = go.Figure(
         data = [
             go.Bar(
-                x=count,
-                y=games,
+                x=count[:30],
+                y=games[:30],
                 marker={
                     'line':{
                         'color': 'rgba(0,0,0,1)',
@@ -359,7 +360,7 @@ def total_players_per_game_bar(year):
         ],
         layout=go.Layout(
             title={
-                'text': 'Количество игроков по играм (' + str(period) + ' год)',
+                'text': 'Количество игроков по играм (' + str(period) + ' год, топ-30)',
                 'font': {
                     'size': 20,
                     'color': 'gold'
@@ -481,8 +482,8 @@ def winner_team_bar(year):
     fig = go.Figure(
         data = [
             go.Bar(
-                x=teams,
-                y=count,
+                x=teams[:30],
+                y=count[:30],
                 marker={
                     'line':{
                         'color': 'rgba(0,0,0,1)',
@@ -510,3 +511,5 @@ def winner_team_bar(year):
 
     winner_team_bar = opy.plot(fig, output_type='div', include_plotlyjs=False, config={'displayModeBar': False})
     return winner_team_bar
+
+

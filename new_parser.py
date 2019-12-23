@@ -167,10 +167,16 @@ def get_monitoring(soup):
                 # team = soup.find(id=re.compile('lnkTeam'))
                 player = soup.find(id=re.compile('lnkUserInfo'))
                 code_type = soup.find(id=re.compile('_lblCorrectValue'))
+                #print("Родитель:", code_type.parent)
+                #print("МЫ ТУТ",code_type.parent.findNext('td'), "\n")
                 code_text = soup.find_all('span', class_='nonLatinChar')
-                print(code_text[0].parent.text)
-
-                parent = code_text[0].parent.text
+                if code_text == []:
+                    #print('TUT')
+                    #print(code_type.parent.findNext('td').text)
+                    code_text = code_type.parent.findNext('td').text
+                    parent = code_text
+                else:
+                    parent = code_text[0].parent.text
                 # print(player.text, code_type.text)
                 """
                 if len(code_text) > 1:
@@ -185,6 +191,7 @@ def get_monitoring(soup):
                 sublist.append(player)
                 sublist.append(code_type.text)
                 sublist.append(parent)
+                print("Строка мониторинга: ", sublist)
                 code_list.append(sublist)
                 # print(type(code_list))
 

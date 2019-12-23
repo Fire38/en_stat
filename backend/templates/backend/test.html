@@ -1,0 +1,158 @@
+{% extends 'backend/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+
+
+
+
+    <div class="container-fluid" id="infoBlock">
+        <div id="1">
+
+        </div>
+        <div id="2">
+
+        </div>
+    </div>
+  <script src="https://code.highcharts.com/highcharts.src.js"></script>
+  <script>
+    Highcharts.chart('1', {
+        chart: {
+
+            backgroundColor: {
+                color: [0, 0, 0, 0],
+                stops: [
+                    [0, 'rgb(255, 255, 255)'],
+                    [1, 'rgb(240, 240, 255)']
+                ]
+            },
+            type: 'bar'
+        },
+        title: {
+            style: { color: 'gold'},
+            text: 'Количество побед по командам'
+        },
+        legend: {
+            enabled: false
+        },
+        xAxis: {
+            lineColor: 'gold',
+            labels: {
+                style: {
+                    color: 'gold'
+                }
+            },
+            categories: [
+            {% for team in dataset %} '{{ team.name }}' {% if not forloop.last %}, {% endif %} {% endfor %}
+            ],
+
+        },
+
+        yAxis: {
+
+            title: {
+                text: 'Количество побед',
+                style: {
+                    color: 'gold'
+                }
+            },
+            labels: {
+                style: {
+                    color: 'gold'
+                }
+            },
+        },
+        series: [{
+            name: 'Количество',
+            data: [{% for team in dataset %} {{ team.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
+            color: "gold"
+        }]
+    });
+  </script>
+
+
+    <script>
+    Highcharts.chart('2', {
+        chart: {
+            backgroundColor: {
+                color: [0, 0, 0, 0],
+                stops: [
+                    [0, 'rgb(255, 255, 255)'],
+                    [1, 'rgb(240, 240, 255)']
+                ]
+            },
+            type: 'bar'
+        },
+        title: {
+            style: { color: 'gold'},
+            text: 'Топ 30 по частоте игр'
+        },
+        legend: {
+            enabled: false
+        },
+        xAxis: {
+            lineColor: 'gold',
+            labels: {
+                style: {
+                    color: 'gold'
+                }
+            },
+            categories: [
+            {% for team in dataset2 %} '{{ team.name }}' {% if not forloop.last %}, {% endif %} {% endfor %}
+            ],
+
+        },
+
+        yAxis: {
+
+            title: {
+                text: 'Количество игр',
+                style: {
+                    color: 'gold'
+                }
+            },
+            labels: {
+                style: {
+                    color: 'gold'
+                }
+            },
+        },
+
+        series: [{
+            name: 'Количество',
+            data: [{% for team in dataset2 %} {{ team.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
+            color: "gold"
+        }]
+    });
+  </script>
+
+
+
+
+{% endblock %}
+
+<!--
+Highcharts.chart('container', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Количество побед по командам'
+        },
+        xAxis: {
+            categories: [
+            {% for team in dataset %}
+                '{{ team.name|safe }}' {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+            ]
+        },
+        series: [{
+            name: 'Количество',
+            data: [
+            {% for team in dataset %}
+                '{{ team.value }}' {% if not forloop.last %}, {% endif %}
+            {% endfor %}],
+            color: 'green'
+        } ]
+    });
+-->

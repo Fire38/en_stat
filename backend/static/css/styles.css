@@ -1,9 +1,14 @@
-body{
-    background-image: url('http://cdn.endata.cx/data/pr/wallpapers/17/17.2048x1536.jpg');
+.webp body{
+    background-image: url('/static/images/background.webp');
     background-repeat: none;
     background-attachment: fixed;
 }
 
+.no-webp body{
+    background-image: url('/static/images/background.jpg');
+    background-repeat: none;
+    background-attachment: fixed;
+}
 
 #navBar, .nav{
     background-color: rgba(0, 0, 0, 0.8);
