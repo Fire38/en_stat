@@ -1,16 +1,14 @@
-from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, render_to_response
 from datetime import datetime
 
 
 from .models import *
 from .sql_requests import *
-from .graphics import *
 
-import json
 import ast
-import plotly.graph_objects as go
-import pygal
+import json
+
+
 
 CURRENT_YEAR_START = datetime.strptime('01/1/2019', '%m/%d/%Y').date()
 
@@ -119,8 +117,6 @@ def index(request, year=2019):
         authors_dict.append(temp_dict)
     json_authors_and_games_list = ast.literal_eval(json.dumps(authors_dict, ensure_ascii=False))
 
-    authors_games_dict = get_author_and_his_games(year)
-
 
     best_team_list = get_best_team_list(2019)
     teams_dict = []
@@ -130,6 +126,7 @@ def index(request, year=2019):
             'value': team[1]
         }
         teams_dict.append(temp_dict)
+    json_string_winner = ast.literal_eval(json.dumps(teams_dict, ensure_ascii=False))
 
     frequency_team_list = get_often_team(2019)[:20]
     often_dict = []
@@ -141,11 +138,10 @@ def index(request, year=2019):
         }
         often_dict.append(temp_dict)
 
-    json_string_winner = ast.literal_eval(json.dumps(teams_dict, ensure_ascii=False))
     json_string_frequency_team = ast.literal_eval(json.dumps(often_dict, ensure_ascii=False))
 
 
-
+    authors_games_dict = get_author_and_his_games(year)
     often_players_table = get_often_player_list(year)
     rate_list = get_players_rate_list(year)
     often_teams_list = get_often_team(year)
