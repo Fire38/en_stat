@@ -7,26 +7,26 @@
 
 {% block content %}
     <div class="container-fluid" id="infoBlock">
-       <p>
-          <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-            Нажми если зашел в первый раз
-          </a>
-        </p>
-        <div class="collapse" id="collapseExample">
-          <div class="card card-body">
-            <ul>
-                <li>Здесь собраны игры проходившие на домене vbratske.en.cx</li>
-                <li>Если игра одиночная, то статистика по игравшим игрокам, командам, оценкам игроков,
-                    мониторингу кодов не собирается</li>
-                <li>К одиночным играм относятся Мокрые войны, Викторины, одиночки на движке схватки </li>
-                <li>Игры признанные несостоявшимися также в учет не берутся (по-моему только одна игра)</li>
-                <li>Коды собраны только с игр, в  которые у меня есть доступ</li>
-                <li>Повторы одного и того же кода одним и тем же игроков не учитываются</li>
-                <li>За количество команд принимается количество поданых заявок</li>
-                <li>За текущий год статистики немного больше чем за предыдущие</li>
-                <li>Если в строке индекса качества игры стоит прочерк, индекс приравнивается к нулю</li>
-            </ul>
-          </div>
+        <div class="accordion" id="accordionExample">
+            <div class="card text-center">
+                <div class="card-header" id="headingOne">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseInfo" aria-expanded="true" aria-controls="collapseOne">
+                        <b>Сначала нажми сюда</b>
+                    </button>
+                </div>
+            </div>
+            <div id="collapseInfo" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <ul>
+                    <li>Здесь собраны игры проходившие на домене vbratske.en.cx</li>
+                    <li>Если игра одиночная, то статистика по игравшим игрокам, командам, оценкам игроков,
+                        мониторингу кодов не собиралась</li>
+                    <li>К одиночным играм относятся Мокрые войны, Викторины, Одиночки на движке схватки </li>
+                    <li>Повторы одного и того же кода одним и тем же игроков не учитываются</li>
+                    <li>За количество команд принимается количество поданых заявок</li>
+                    <li>За текущий год статистики немного больше, чем за предыдущие</li>
+                    <li>Если в строке индекса качества игры стоит прочерк, индекс приравнивается к нулю</li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -339,7 +339,8 @@
                     series: [{
                         name: 'Количество команд',
                         data: [{% for entry in total_teams_per_game %} {{ entry.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
-                        color: "gold"
+                        color: "gold",
+                        borderColor: "gold"
                     }]
                 });
             </script>
@@ -360,7 +361,7 @@
 
                     title: {
                         style: { color: 'gold'},
-                        text: 'Количество энщиков по играм'
+                        text: 'Количество энщиков по командным играм'
                     },
                     legend: {
                         enabled: false
@@ -395,7 +396,8 @@
                     series: [{
                         name: 'Количество игроков',
                         data: [{% for entry in total_players_per_game %} {{ entry.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
-                        color: "gold"
+                        color: "gold",
+                        borderColor: "gold"
                     }]
                 });
             </script>
@@ -417,7 +419,7 @@
 
                 title: {
                     style: { color: 'gold'},
-                    text: 'Самые резонансные на форуме игры (топ 30)'
+                    text: 'Самые резонансные на форуме игры (топ-30)'
                 },
                 legend: {
                     enabled: false
@@ -452,7 +454,8 @@
                 series: [{
                     name: 'Количество сообщений',
                     data: [{% for entry in top_forum_resonance_game %} {{ entry.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
-                    color: "gold"
+                    color: "gold",
+                    borderColor: "gold"
                 }]
             });
         </script>
@@ -472,7 +475,7 @@
 
                 title: {
                     style: { color: 'gold'},
-                    text: 'Качество игр'
+                    text: 'Качество командных игр'
                 },
                 legend: {
                     enabled: false
@@ -491,7 +494,7 @@
                 },
 
                 yAxis: {
-
+                    tickInterval: 0.2,
                     title: {
                         text: 'Индекс качества игры',
                         style: {
@@ -504,13 +507,17 @@
                         }
                     },
                 },
+
                 series: [{
                     name: 'Индекс качества игры',
                     data: [{% for entry in quality_game_list %} {{ entry.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
-                    color: "gold"
+                    color: "gold",
+                    borderColor: "gold",
+
                 }]
             });
         </script>
+
     </div>
 
 
@@ -554,11 +561,16 @@
                 }
                 },
                 series: [{
-                    name: 'Brands',
+                    name: 'Процент',
                     colorByPoint: true,
-                    data: [{% for entry in authors_and_games %}{name: '{{ entry.name}}', y: {{ entry.value }} }{% if not forloop.last %}, {% endif %}{% endfor %}]
+                    data: [{% for entry in authors_and_games %}{name: '{{ entry.name}}', y: {{ entry.value }} }{% if not forloop.last %}, {% endif %}{% endfor %}],
+                    dataLabels: {
+                        color: 'gold',
+                        style: {color: 'gold', fontSize: '12px', textOutline: '1px'}
+                    },
                 }]
             });
+
         </script>
 
 
@@ -623,7 +635,7 @@
                 },
                 title: {
                     style: { color: 'gold'},
-                    text: 'Количество побед по командам'
+                    text: 'Количество побед у каждой команды'
                 },
                 legend: {
                     enabled: false
@@ -636,7 +648,7 @@
                         }
                     },
                     categories: [
-                    {% for team in dataset %} '{{ team.name }}' {% if not forloop.last %}, {% endif %} {% endfor %}
+                    {% for team in total_win_per_team %} '{{ team.name }}' {% if not forloop.last %}, {% endif %} {% endfor %}
                     ],
 
                 },
@@ -657,8 +669,9 @@
                 },
                 series: [{
                     name: 'Количество',
-                    data: [{% for team in dataset %} {{ team.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
-                    color: "gold"
+                    data: [{% for team in total_win_per_team %} {{ team.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
+                    color: "gold",
+                    borderColor: "gold"
                 }]
             });
         </script>
@@ -677,7 +690,7 @@
                 },
                 title: {
                     style: { color: 'gold'},
-                    text: 'Топ 30 по частоте игр'
+                    text: 'Топ-20 частоиграющих команд'
                 },
                 legend: {
                     enabled: false
@@ -690,7 +703,7 @@
                         }
                     },
                     categories: [
-                    {% for team in dataset2 %} '{{ team.name }}' {% if not forloop.last %}, {% endif %} {% endfor %}
+                    {% for team in frequency_teams %} '{{ team.name }}' {% if not forloop.last %}, {% endif %} {% endfor %}
                     ],
 
                 },
@@ -712,8 +725,9 @@
 
                 series: [{
                     name: 'Количество',
-                    data: [{% for team in dataset2 %} {{ team.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
-                    color: "gold"
+                    data: [{% for team in frequency_teams %} {{ team.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
+                    color: "gold",
+                    borderColor: "gold"
                 }]
             });
         </script>
@@ -803,7 +817,7 @@
                 },
                 title: {
                     style: { color: 'gold'},
-                    text: 'Количество сыгранных игр (топ 50)'
+                    text: 'Количество сыгранных игр (топ-50)'
                 },
                 legend: {
                     enabled: false
@@ -839,7 +853,8 @@
                 series: [{
                     name: 'Количество игр',
                     data: [{% for player in frequency_player_list %} {{ player.value}} {% if not forloop.last %}, {% endif %} {% endfor %}],
-                    color: "gold"
+                    color: "gold",
+                    borderColor: "gold"
                 }]
             });
         </script>
@@ -913,11 +928,16 @@
     <div class="container-fluid" id="infoBlock">
         <h2>Коды</h2>
         <hr/>
+        <b>Всего кодов вбито:</b> {{ codes_count.0 }}<br/>
+        <b>Из них правильных: </b> {{ correct_codes.0 }}<br/>
+        <b>неправильных:</b> {{ wrong_codes.0 }} <br/>
+        Самые частобьющиеся коды (таблица)
+        График баянных кодов 2019
+
 
     </div>
     <script>
         var year = {{ year }}
     </script>
     <script src="{% static 'js/sql_requests.js' %}"></script>
-    <script src="{% static 'js/graphic_requests.js' %}"></script>
 {% endblock %}

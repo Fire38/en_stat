@@ -12,6 +12,4 @@ urlpatterns = [
     path('get_main_top_information', get_main_top_information, name='main_top_information'),
     path('get_main_players_information', get_main_players_information, name='main_players_information'),
 
-    path('get_often_players_graphics', get_often_players_graphic, name='often_players_graphics'),
-    path('get_often_and_winner_teams_graphics', get_often_and_winner_teams_graphic, name='often_and_winner_teams_graphic')
 ]
