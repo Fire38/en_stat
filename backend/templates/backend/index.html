@@ -204,10 +204,14 @@
                         labels: {
                             style: {
                                 color: 'gold'
+                            },
+                        formatter: function () {
+                            let monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май","Июнь","Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь","Декабрь"]
+                                return monthNames[this.value-1];
                             }
                         },
                         categories: [
-                        {% for entry in total_teams_per_month %} '{{ entry.year }}' {% if not forloop.last %}, {% endif %} {% endfor %}
+                        {% for entry in total_teams_per_month %} '{{ entry.month }}' {% if not forloop.last %}, {% endif %} {% endfor %}
                         ],
 
                     },
@@ -258,6 +262,11 @@
                         labels: {
                             style: {
                                 color: 'gold'
+                            },
+
+                        formatter: function () {
+                            let monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май","Июнь","Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь","Декабрь"]
+                                return monthNames[this.value-1];
                             }
                         },
                         categories: [
