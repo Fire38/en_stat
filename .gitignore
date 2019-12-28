@@ -7,3 +7,5 @@ db.sqlite3
 .DS_Store
 new_parser.py
 page.html
+*.sql
+
