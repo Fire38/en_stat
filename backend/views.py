@@ -112,7 +112,7 @@ def index(request, year=2019):
         authors_dict.append(temp_dict)
     json_authors_and_games_list = ast.literal_eval(json.dumps(authors_dict, ensure_ascii=False))
 
-    best_team_list = get_best_team_list(2019)
+    best_team_list = get_best_team_list(year)
     teams_dict = []
     for team in best_team_list:
         temp_dict = {
@@ -122,7 +122,7 @@ def index(request, year=2019):
         teams_dict.append(temp_dict)
     json_winners = ast.literal_eval(json.dumps(teams_dict, ensure_ascii=False))
 
-    frequency_team_list = get_often_team(2019)[:20]
+    frequency_team_list = get_often_team(year)[:20]
     often_dict = []
     for team in frequency_team_list:
         temp_dict = {
@@ -131,7 +131,6 @@ def index(request, year=2019):
             'value': team[2]
         }
         often_dict.append(temp_dict)
-
     json_frequency_teams = ast.literal_eval(json.dumps(often_dict, ensure_ascii=False))
 
     authors_games_dict = get_author_and_his_games(year)
@@ -143,6 +142,8 @@ def index(request, year=2019):
     codes_count = get_code_count(year)
     correct_codes = get_correct_code_count(year)
     wrong_codes = get_wrong_code_count(year)
+    code_with_wrong_address_all = wrong_address_all_time
+    code_with_wrong_address_2019 = wrong_address_2019
 
     return render(request, 'backend/index.html', {'total_players_per_year': json_players_per_year,
                                                   'total_teams_per_year': json_teams_per_year,
@@ -164,12 +165,12 @@ def index(request, year=2019):
                                                   'codes_count': codes_count,
                                                   'correct_codes': correct_codes,
                                                   'wrong_codes': wrong_codes,
-
+                                                  'wrong_address_all_time': code_with_wrong_address_all,
+                                                  'wrong_address_2019': code_with_wrong_address_2019,
 
                                                   'total_win_per_team': json_winners,
                                                   'frequency_teams': json_frequency_teams,
                                                   'year': year,
-
                                                   })
 
 
@@ -191,7 +192,7 @@ def get_main_count_information(request):
 def get_main_top_information(request):
     year = int(request.GET.get('year'))
     max_resonance_game = get_top_forum_resonance(year)[:3]
-    max_quality_game = get_best_game_quality(year)[:3]
+    max_quality_game =  get_top_game_quality(year)[:3]
 
     best_team_list = get_best_team_list(year)
     top3_best_team = best_team_list[:3]

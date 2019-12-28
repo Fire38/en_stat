@@ -158,8 +158,6 @@ def get_monitoring(soup):
         print(MAIN_URL + monitoring_href['href'] + '&page=' + str(i))
         res = session.get(MAIN_URL + monitoring_href['href'] + '&page=' + str(i), headers=headers)
         player_block = res.text.split('padL5')
-        with open('page.html', 'w') as file:
-            file.write(res.text)
         for block in player_block:
             soup = BeautifulSoup(block, 'html.parser')
             try:
@@ -277,8 +275,6 @@ for i in range(1,25):
         url = 'http://vbratske.en.cx' + game_href
         print(url)
         res = session.get(url, headers=headers)
-        with open('game.html', 'w') as i:
-            i.write(res.text)
         soup = BeautifulSoup(res.text, 'html.parser')
 
         game_title, url, game_diff, quality_index, team_count, game_type, forum_resonance, date, authors = get_general_game_information(soup)

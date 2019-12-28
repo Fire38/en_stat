@@ -73,3 +73,7 @@ h2{
 tr, th, td{
     border-color: gold;
 }
+
+#textInfo{
+    margin-left:20px;
+}

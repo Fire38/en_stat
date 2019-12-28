@@ -2,7 +2,7 @@
 
 
 <div id="top-list">
-    <div class="row">
+    <div class="row" id="textInfo">
         <div class="col-4">
             <b>Топ-3 резонансных игр на форуме:</b>
             {% for game in max_resonance_game %}
@@ -16,7 +16,7 @@
             <b>Топ-3 качественных командных игр:</b>
             {% for game in max_quality_game %}
                 <br/>
-                <a href="{{ game.1 }}">{{ game.0 }}</a> ({{ game.2 }})
+                <a href="{{ game.2 }}">{{ game.0 }}</a> ({{ game.1 }})
             {% endfor %}
             <br/>
         </div>
@@ -30,7 +30,7 @@
     </div>
     <br/>
 
-    <div class="row">
+    <div class="row" id="textInfo">
         <div class="col-4">
             <b>Топ-3 частоиграющих команд: </b>
             <br/>
