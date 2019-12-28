@@ -3,7 +3,7 @@
 __pycache__
 myvenv
 db.sqlite3
-/static
+/static/images
 .DS_Store
 new_parser.py
 page.html
