@@ -5,6 +5,8 @@ from datetime import datetime
 from django.shortcuts import render, render_to_response
 
 from .sql_requests import *
+from .forms import ProphetForm
+from .models import Congratulation
 
 CURRENT_YEAR_START = datetime.strptime('01/1/2019', '%m/%d/%Y').date()
 
@@ -223,3 +225,17 @@ def get_main_players_information(request):
                                                                                         'strict_rate_players': strict_rate_players,
                                                                                         'often_players': often_players
                                                                                         })
+
+
+def happy_new_year(request):
+    text = ''
+    try:
+        number = int(request.GET.get('number'))
+    except:
+        number = 0
+    if number in range(1, 10):
+        text = Congratulation.objects.get(number=number).text
+
+    form = ProphetForm()
+
+    return render(request, 'backend/happy_new_year.html', {'form': form, 'text': text})

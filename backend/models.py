@@ -69,3 +69,12 @@ class Author(models.Model):
 
     def __str__(self):
         return self.player.name + ' - ' + self.game.name
+
+
+
+class Congratulation(models.Model):
+    number = models.IntegerField()
+    text = models.CharField(max_length=2000)
+
+    def __str__(self):
+        return str(self.number) + ' - ' + self.text[:30]
