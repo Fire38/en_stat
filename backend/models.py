@@ -22,6 +22,7 @@ class Game(models.Model):
     forum_resonance = models.IntegerField()
     winner = models.CharField(max_length=100)
     team = models.ManyToManyField(Team, blank=True)
+    domen = models.CharField(default='vbratske', max_length=100)
 
     def __str__(self):
         return self.name

@@ -28,7 +28,8 @@ def get_all_authors_and_count_game(year):
         cursor.execute("SELECT backend_player.name, COUNT(backend_player.name) FROM backend_author"
                        " JOIN backend_player ON backend_player.id=backend_author.player_id"
                        " JOIN backend_game ON backend_game.id=backend_author.game_id"
-                       " WHERE backend_game.finish_date >= '01-01-%s' GROUP BY backend_player.name"
+                       " WHERE backend_game.finish_date >= '01-01-%s'"
+                       " GROUP BY backend_player.name"
                        " ORDER BY COUNT(backend_player.name) DESC", [year])
         author_and_game_count_list = cursor.fetchall()
     return author_and_game_count_list
@@ -89,7 +90,7 @@ def get_total_players_per_month(year):
         cursor.execute("SELECT COUNT(DISTINCT backend_player.name), EXTRACT(month FROM finish_date) FROM backend_player"
                        " JOIN backend_personal_statistic ON backend_player.id=backend_personal_statistic.player_id"
                        " JOIN backend_game ON backend_personal_statistic.game_id=backend_game.id"
-                       " WHERE EXTRACT(year FROM backend_game.finish_date) = '%s' "
+                       " WHERE EXTRACT(year FROM backend_game.finish_date) = '%s'"
                        " GROUP BY EXTRACT(month FROM backend_game.finish_date)", [year])
         total_players_per_month = cursor.fetchall()
     return total_players_per_month
@@ -103,7 +104,7 @@ def get_total_players_per_game(year):
                        " JOIN backend_player on backend_personal_statistic.player_id = backend_player.id"
                        " JOIN backend_game ON backend_game.id=backend_personal_statistic.game_id"
                        " WHERE EXTRACT(year FROM backend_game.finish_date) = '%s'"
-                       " AND backend_game.game_type = 'Командная' "
+                       " AND backend_game.game_type = 'Командная'"
                        " GROUP BY backend_game.name"
                        " ORDER BY COUNT(backend_player) DESC", [year])
         total_players_per_game = cursor.fetchall()
@@ -154,7 +155,7 @@ def get_total_teams_per_game(year):
                        " JOIN backend_game_team ON backend_team.id=backend_game_team.team_id "
                        " JOIN backend_game ON backend_game.id=backend_game_team.game_id"
                        " WHERE EXTRACT(year FROM backend_game.finish_date) = '%s'"
-                       " AND backend_game.game_type='Командная' "
+                       " AND backend_game.game_type='Командная'"
                        " GROUP BY backend_game.name "
                        " ORDER BY count(backend_team.name) DESC", [year])
         total_teams_per_game = cursor.fetchall()
@@ -178,7 +179,8 @@ def get_max_forum_resonance(year):
 def get_top_forum_resonance(year):
     """ Список резонансных на форуме игр"""
     with connection.cursor() as cursor:
-        cursor.execute("SELECT name, forum_resonance, url FROM backend_game WHERE backend_game.finish_date >= '01-01-%s'"
+        cursor.execute("SELECT name, forum_resonance, url FROM backend_game "
+                       " WHERE backend_game.finish_date >= '01-01-%s'"
                        " ORDER BY forum_resonance DESC", [year])
         top_forum_resonance = cursor.fetchall()
     return top_forum_resonance
@@ -191,7 +193,7 @@ def get_best_game_quality(year):
                        " WHERE quality_index = (SELECT MAX(quality_index) FROM backend_game "
                        "                        WHERE backend_game.game_type = 'Командная' "
                        "                        AND backend_game.finish_date >= '01-01-%s') "
-                       "AND finish_date >= '01-01-%s'", [year, year])
+                       " AND finish_date >= '01-01-%s'", [year, year])
 
         max_quality_game = cursor.fetchall()
     return max_quality_game
@@ -202,7 +204,7 @@ def get_top_game_quality(year):
     with connection.cursor() as cursor:
         cursor.execute("SELECT name, quality_index, url FROM backend_game"
                        " WHERE game_type='Командная'"
-                       " AND finish_date >= '01-01-%s' "
+                       " AND finish_date >= '01-01-%s'"
                        " ORDER BY quality_index DESC", [year])
         top_game_quality = cursor.fetchall()
     # print(top_game_quality)
