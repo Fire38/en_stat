@@ -2,7 +2,6 @@ from django.db import models
 
 # Create your models here.
 
-
 class Team(models.Model):
     name = models.CharField(max_length=150, unique=True)
     url = models.URLField(max_length=100)
@@ -18,11 +17,12 @@ class Game(models.Model):
     finish_date = models.DateField(blank=True, null=True)
     diff_game = models.FloatField()
     quality_index = models.FloatField()
-    team_count = models.IntegerField()
+    team_count = models.IntegerField(default=0)
     forum_resonance = models.IntegerField()
     winner = models.CharField(max_length=100)
     team = models.ManyToManyField(Team, blank=True)
     domen = models.CharField(default='vbratske', max_length=100)
+    done = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -31,9 +31,13 @@ class Game(models.Model):
 class Player(models.Model):
     name = models.CharField(max_length=100)
     url = models.URLField(max_length=100)
+    victory_count = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        unique_together = ('name', 'url')
 
 
 class Personal_statistic(models.Model):
@@ -56,7 +60,7 @@ class Rating(models.Model):
 
 class Code(models.Model):
     player = models.ManyToManyField(Player)
-    code_text = models.CharField(max_length=200)
+    code_text = models.CharField(max_length=8000)
     correct = models.BooleanField()
     game = models.ManyToManyField(Game)
 
@@ -72,10 +76,3 @@ class Author(models.Model):
         return self.player.name + ' - ' + self.game.name
 
 
-
-class Congratulation(models.Model):
-    number = models.IntegerField()
-    text = models.CharField(max_length=2000)
-
-    def __str__(self):
-        return str(self.number) + ' - ' + self.text[:30]

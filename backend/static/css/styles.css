@@ -1,11 +1,11 @@
 .webp body{
-    background-image: url('/static/images/background.webp');
+    background-image: url('/static/images/background2.webp');
     background-repeat: none;
     background-attachment: fixed;
 }
 
 .no-webp body{
-    background-image: url('/static/images/background.jpg');
+    background-image: url('/static/images/background2.jpg');
     background-repeat: none;
     background-attachment: fixed;
 }

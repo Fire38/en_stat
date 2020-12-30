@@ -274,9 +274,10 @@ def get_often_player_list(year):
                        " WHERE backend_game.id=backend_personal_statistic.game_id"
                        " AND backend_game.finish_date >= '01-01-%s'"
                        " AND backend_personal_statistic.player_id = backend_player.id"
+                       " AND backend_game.domen = %s"
                        " GROUP BY backend_player.name"
                        " HAVING COUNT(backend_player.name) > 1"
-                       " ORDER BY count DESC", [year])
+                       " ORDER BY count DESC", [year, 'vbratske'])
         often_player_list = cursor.fetchall()
     return often_player_list
 
@@ -329,7 +330,7 @@ wrong_address_all_time = [
 ]
 
 
-wrong_address_2019 = [
+wrong_address_2020 = [
     {'name': 'Янгеля 120', 'value': 66},
     {'name': 'Обручева 28', 'value': 49},
     {'name': 'Янгеля 122', 'value': 37},

@@ -5,14 +5,12 @@ from datetime import datetime
 from django.shortcuts import render, render_to_response
 
 from .sql_requests import *
-from .forms import ProphetForm
-from .models import Congratulation
 
-CURRENT_YEAR_START = datetime.strptime('01/1/2019', '%m/%d/%Y').date()
+CURRENT_YEAR_START = datetime.strptime('01/1/2020', '%m/%d/%Y').date()
 
 
 # Create your views here.
-def index(request, year=2019):
+def index(request, year=2020):
     total_players_per_year_list = get_total_players_per_year()
     years_dict = []
     for y in total_players_per_year_list:
@@ -145,7 +143,7 @@ def index(request, year=2019):
     correct_codes = get_correct_code_count(year)
     wrong_codes = get_wrong_code_count(year)
     code_with_wrong_address_all = wrong_address_all_time
-    code_with_wrong_address_2019 = wrong_address_2019
+    code_with_wrong_address_2020 = wrong_address_2020
 
     return render(request, 'backend/index.html', {'total_players_per_year': json_players_per_year,
                                                   'total_teams_per_year': json_teams_per_year,
@@ -168,7 +166,7 @@ def index(request, year=2019):
                                                   'correct_codes': correct_codes,
                                                   'wrong_codes': wrong_codes,
                                                   'wrong_address_all_time': code_with_wrong_address_all,
-                                                  'wrong_address_2019': code_with_wrong_address_2019,
+                                                  'wrong_address_2020': code_with_wrong_address_2020,
 
                                                   'total_win_per_team': json_winners,
                                                   'frequency_teams': json_frequency_teams,
@@ -227,15 +225,3 @@ def get_main_players_information(request):
                                                                                         })
 
 
-def happy_new_year(request):
-    text = ''
-    try:
-        number = int(request.GET.get('number'))
-    except:
-        number = 0
-    if number in range(1, 10):
-        text = Congratulation.objects.get(number=number).text
-
-    form = ProphetForm()
-
-    return render(request, 'backend/happy_new_year.html', {'form': form, 'text': text})

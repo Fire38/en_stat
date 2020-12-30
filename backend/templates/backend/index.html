@@ -23,7 +23,7 @@
                         мониторингу кодов не собиралась</li>
                     <li>К одиночным играм относятся Мокрые войны, Одиночки на движке схватки </li>
                     <li>Повторы одного и того же кода одним и тем же игроков не учитываются</li>
-                    <li>За количество команд принимается количество поданых заявок</li>
+                    <li>За количество команд принимается <b>количество команд в финальной таблице</b></li>
                     <li>За текущий год статистики немного больше, чем за предыдущие</li>
                     <li>Если в строке индекса качества игры в движке стоит прочерк, индекс приравнивается к нулю</li>
                 </ul>
@@ -48,13 +48,14 @@
     <div class="container-fluid" id="infoBlock">
         <h2>Игры</h2>
         <hr/>
-        <div class="col-12">
-            <div id="1"></div>
+
+    <div class="col-12">
+            <!--<div id="1"></div>
             <br/>
             <br/>
             <div id="2"></div>
             <br/>
-            <br/>
+            <br/> -->
             <div id="3"></div>
             <br/>
             <br/>
@@ -71,7 +72,7 @@
             <br/>
             <br/>
             <div id="8"></div>
-            <script>
+            <!--<script>
                 Highcharts.chart('1', {
                     chart: {
 
@@ -177,10 +178,10 @@
                         color: "gold"
                     }]
                 });
-            </script>
+            </script>-->
         </div>
 
-         {% if year == 2019 %}
+         {% if year == 2020 %}
             <script>
                 Highcharts.chart('3', {
                     chart: {
@@ -943,7 +944,7 @@
             <b>Из них правильных: </b> {{ correct_codes.0 }}<br/>
             <b>неправильных:</b> {{ wrong_codes.0 }} <br/>
         </div>
-
+        <!--
         <div class="accordion" id="accordionExample">
               <div class="card">
                 <div class="card-header" id="headingOne">
@@ -976,13 +977,13 @@
               </div>
         </div>
 
-        {% if year == 2019 %}
+        {% if year == 2020 %}
             <div class="accordion" id="accordionExample">
                   <div class="card">
                     <div class="card-header" id="headingOne">
 
                         <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseCode" aria-expanded="true" aria-controls="collapseOne">
-                            <b>10 самых проверяемых игроками локаций за 2019 год</b>
+                            <b>10 самых проверяемых игроками локаций за 2020 год</b>
                         </button>
 
                     </div>
@@ -1008,7 +1009,7 @@
                       </div>
                   </div>
             </div>
-        {% endif %}
+        {% endif %} -->
 
 
     </div>
